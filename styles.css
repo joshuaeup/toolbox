@@ -97,6 +97,60 @@ body {
 
 @media (max-width: 720px) {
   .layout { grid-template-columns: 1fr; }
+
+  /* Mobile tab switching — JS adds/removes these */
+  .panel.ct-mobile-hidden,
+  .results-col.ct-mobile-hidden { display: none !important; }
+
+  /* Extra bottom padding so content isn't hidden behind the tab bar */
+  .page { padding-bottom: 80px; }
+
+  /* Unstick the sidebar on mobile so it scrolls naturally */
+  .panel { position: static; }
+}
+
+/* ─── Mobile tab bar ─────────────────────────────────────────────────────── */
+
+#ct-tab-bar {
+  display: none; /* shown only on mobile via JS */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: var(--color-background-primary);
+  border-top: 0.5px solid var(--color-border-tertiary);
+  height: 60px;
+  padding: 0 1rem env(safe-area-inset-bottom, 0);
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ct-tab {
+  flex: 1;
+  max-width: 200px;
+  height: 40px;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 10px;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ct-tab.ct-tab-active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
 }
 
 .results-col {

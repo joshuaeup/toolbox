@@ -48,4 +48,58 @@ const NAV_LINKS = [
 
   document.body.insertBefore(nav, document.body.firstChild);
   document.body.classList.add('ct-has-navbar');
+
+  // ── Mobile tab bar (inputs / results) ──────────────────────────────────
+  // Only inject on pages that have the two-panel calculator layout.
+  function initMobileTabs() {
+    const panel      = document.querySelector('.panel');
+    const resultsCol = document.querySelector('.results-col');
+    if (!panel || !resultsCol) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'ct-tab-bar';
+    bar.innerHTML = `
+      <button class="ct-tab" id="ct-tab-results">📊 Results</button>
+      <button class="ct-tab" id="ct-tab-inputs">🎚 Inputs</button>
+    `;
+    document.body.appendChild(bar);
+
+    function showTab(active) {
+      const isResults = active === 'results';
+      panel.classList.toggle('ct-mobile-hidden', isResults);
+      resultsCol.classList.toggle('ct-mobile-hidden', !isResults);
+      document.getElementById('ct-tab-results').classList.toggle('ct-tab-active', isResults);
+      document.getElementById('ct-tab-inputs').classList.toggle('ct-tab-active', !isResults);
+      // Scroll to top when switching tabs so the user sees the content
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('ct-tab-results').addEventListener('click', () => showTab('results'));
+    document.getElementById('ct-tab-inputs').addEventListener('click', () => showTab('inputs'));
+
+    function applyMobileLayout() {
+      const isMobile = window.innerWidth <= 720;
+      bar.style.display = isMobile ? 'flex' : 'none';
+      if (!isMobile) {
+        // Reset any hidden state when returning to desktop
+        panel.classList.remove('ct-mobile-hidden');
+        resultsCol.classList.remove('ct-mobile-hidden');
+      } else {
+        // Ensure a tab is always active on mobile
+        const noneActive = !panel.classList.contains('ct-mobile-hidden') &&
+                           !resultsCol.classList.contains('ct-mobile-hidden');
+        if (noneActive) showTab('results');
+      }
+    }
+
+    applyMobileLayout();
+    window.addEventListener('resize', applyMobileLayout);
+  }
+
+  // Run after DOM is ready (navbar.js is called at top of body, so defer slightly)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileTabs);
+  } else {
+    initMobileTabs();
+  }
 })();
