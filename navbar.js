@@ -35,7 +35,7 @@ const NAV_LINKS = [
   nav.setAttribute('aria-label', 'Site navigation');
   nav.innerHTML = `
     <div class="ct-nav-inner">
-      <a class="ct-nav-brand" href="index.html">Claude Tools</a>
+      <a class="ct-nav-brand" href="index.html">Tools</a>
       <div class="ct-nav-divider" aria-hidden="true"></div>
       <ul class="ct-nav-links">
         ${NAV_LINKS.map(({ href, label }) => {

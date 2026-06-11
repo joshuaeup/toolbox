@@ -1,4 +1,4 @@
-# Claude Tools
+# Tools
 
 A personal collection of interactive calculators and references, served as a static site via GitHub Pages.
 
