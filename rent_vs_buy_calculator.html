@@ -6,95 +6,7 @@
 <title>Rent vs. Buy Calculator</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <link rel="stylesheet" href="navbar.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --color-background-primary:#ffffff;
-  --color-background-secondary:#f5f5f3;
-  --color-background-tertiary:#eeece6;
-  --color-text-primary:#1a1a18;
-  --color-text-secondary:#5f5e5a;
-  --color-text-tertiary:#888780;
-  --color-border-tertiary:rgba(0,0,0,0.12);
-  --color-border-secondary:rgba(0,0,0,0.22);
-  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --border-radius-md:8px;
-  --border-radius-lg:12px;
-  --border-radius-xl:16px;
-}
-@media(prefers-color-scheme:dark){
-  :root{
-    --color-background-primary:#1e1e1c;
-    --color-background-secondary:#2a2a27;
-    --color-background-tertiary:#323230;
-    --color-text-primary:#f0ede6;
-    --color-text-secondary:#b4b2a9;
-    --color-text-tertiary:#888780;
-    --color-border-tertiary:rgba(255,255,255,0.10);
-    --color-border-secondary:rgba(255,255,255,0.18);
-  }
-}
-body{font-family:var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary);min-height:100vh;padding:2rem 1rem;}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
-.page{max-width:980px;margin:0 auto;}
-.page-header{margin-bottom:2rem;}
-.page-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;}
-.page-sub{font-size:14px;color:var(--color-text-secondary);line-height:1.6;}
-.layout{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;}
-@media(max-width:720px){.layout{grid-template-columns:1fr;}}
-
-.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-xl);padding:1.5rem;position:sticky;top:1rem;}
-.panel-title{font-size:12px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:1.25rem;}
-.section-label{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:0.875rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--color-border-tertiary);}
-.ctrl{margin-bottom:1.1rem;}
-.ctrl-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
-.ctrl-label{font-size:13px;color:var(--color-text-secondary);}
-.ctrl-value{font-size:14px;font-weight:500;color:var(--color-text-primary);}
-input[type=range]{width:100%;accent-color:#1D9E75;cursor:pointer;}
-.ctrl-hint{font-size:11px;color:var(--color-text-tertiary);margin-top:3px;}
-.pill{display:inline-block;font-size:11px;font-weight:500;padding:2px 8px;border-radius:99px;margin-top:4px;}
-.pill-amber{background:#FAEEDA;color:#633806;}
-.divider{height:0.5px;background:var(--color-border-tertiary);margin:1rem 0;}
-
-.results-col{display:flex;flex-direction:column;gap:16px;}
-.green{color:#0F6E56;}
-.red{color:#A32D2D;}
-.blue{color:#185FA5;}
-.amber{color:#854F0B;}
-
-.hero-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-xl);padding:1.5rem 1.75rem;}
-.hero-card.h-wait{border-top:3px solid #1D9E75;}
-.hero-card.h-neutral{border-top:3px solid #EF9F27;}
-.hero-card.h-buy{border-top:3px solid #185FA5;}
-.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:0.5rem;}
-.hero-number{font-size:42px;font-weight:500;line-height:1;letter-spacing:-0.01em;margin-bottom:0.5rem;}
-.hero-headline{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.5rem;line-height:1.45;}
-.hero-explainer{font-size:13px;color:var(--color-text-secondary);line-height:1.65;}
-
-.compare-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-xl);padding:1.25rem 1.5rem;}
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-.compare-col{padding:0 1rem;}
-.compare-col:first-child{padding-left:0;border-right:0.5px solid var(--color-border-tertiary);}
-.compare-col:last-child{padding-right:0;}
-@media(max-width:520px){.compare-grid{grid-template-columns:1fr;gap:1.25rem;}.compare-col{padding:0;}.compare-col:first-child{border-right:none;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:1.25rem;}}
-.compare-tag{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:0.5rem;}
-.compare-tag .dot{width:8px;height:8px;border-radius:99px;flex-shrink:0;}
-.compare-number{font-size:26px;font-weight:500;line-height:1.1;margin-bottom:0.25rem;letter-spacing:-0.01em;}
-.compare-caption{font-size:12px;color:var(--color-text-tertiary);margin-bottom:0.875rem;}
-.compare-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-top:0.5px solid var(--color-border-tertiary);}
-.compare-row:first-of-type{border-top:none;padding-top:0;}
-.compare-row .lbl{color:var(--color-text-secondary);}
-.compare-row .val{color:var(--color-text-primary);font-weight:500;text-align:right;}
-
-.chart-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-xl);padding:1.25rem 1.5rem;}
-.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;flex-wrap:wrap;gap:8px;}
-.chart-title{font-size:13px;font-weight:500;color:var(--color-text-primary);}
-.chart-sub{font-size:11px;color:var(--color-text-tertiary);margin-bottom:1rem;}
-.legend{display:flex;gap:16px;flex-wrap:wrap;}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary);}
-.legend-line{width:18px;height:2.5px;flex-shrink:0;}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <script src="navbar.js"></script>
@@ -193,16 +105,16 @@ input[type=range]{width:100%;accent-color:#1D9E75;cursor:pointer;}
         </div>
       </div>
 
-      <div class="compare-card">
+      <div class="card">
         <div class="compare-grid">
           <div class="compare-col">
-            <div class="compare-tag"><span class="dot" style="background:#1D9E75;"></span><span id="c-buy-tag-text">If you buy now</span></div>
+            <div class="compare-tag"><span class="dot" style="background:#1D9E75;width:8px;height:8px;border-radius:99px;flex-shrink:0;display:inline-block;"></span><span id="c-buy-tag-text">If you buy now</span></div>
             <div class="compare-number green" id="c-buy-total">—</div>
             <div class="compare-caption" id="c-buy-cap">net wealth at year <span class="c-yr">5</span></div>
             <div id="c-buy-rows"></div>
           </div>
           <div class="compare-col">
-            <div class="compare-tag"><span class="dot" style="background:#378ADD;"></span><span id="c-wait-tag-text">If you wait &amp; save</span></div>
+            <div class="compare-tag"><span class="dot" style="background:#378ADD;width:8px;height:8px;border-radius:99px;flex-shrink:0;display:inline-block;"></span><span id="c-wait-tag-text">If you wait &amp; save</span></div>
             <div class="compare-number blue" id="c-wait-total">—</div>
             <div class="compare-caption" id="c-wait-cap">net wealth at year <span class="c-yr">5</span></div>
             <div id="c-wait-rows"></div>
@@ -214,6 +126,7 @@ input[type=range]{width:100%;accent-color:#1D9E75;cursor:pointer;}
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const fmt = v => '$' + Math.round(Math.abs(v)).toLocaleString();
@@ -279,12 +192,8 @@ function update() {
     ? '<div class="pill pill-amber"><i class="ti ti-alert-circle" aria-hidden="true"></i> PMI · remove at 20% equity after 2 yrs</div>'
     : '';
 
-  // Update inline year labels in scenario columns
   document.querySelectorAll('.c-yr').forEach(el => el.textContent = years);
 
-  // ── Simulate both scenarios year by year ──
-  // BUY scenario: home equity + leftover SPY (cash not used at close, plus ongoing savings)
-  // WAIT scenario: full SPY balance compounding, minus rent paid each year
   const labels   = [];
   const buyLine  = [];
   const waitLine = [];
@@ -299,57 +208,40 @@ function update() {
 
   const monthlyInvRate  = Math.pow(1 + invRet, 1/12) - 1;
   const monthlyBudget   = rent0 + saveMonthly;
-  const ongoingNonLoan  = price * 0.01 / 12 + ins + maintMo + hoaMo; // tax+ins+maint+hoa still owed after payoff
+  const ongoingNonLoan  = price * 0.01 / 12 + ins + maintMo + hoaMo;
 
   let totalInterestPaid = 0;
   let totalMaintPaid    = 0;
 
   for (let y = 0; y <= years; y++) {
     labels.push('Yr ' + y);
-
     const homeVal    = price * Math.pow(1 + appr, y);
     const homeEquity = homeVal - loanBal;
     buyLine.push(Math.round(homeEquity + buySpy));
     waitLine.push(Math.round(waitSav));
 
     if (y < years) {
-      // ── BUY simulation: 12 monthly steps ──
       for (let m = 0; m < 12; m++) {
-        // Maintenance + HOA are always paid (loan paid off or not)
         totalMaintPaid += maintMo + hoaMo;
-
         if (loanBal > 0.01) {
           const interest = loanBal * monthlyRate;
           const stdPrincipal = pi - interest;
           const taxMonthly = price * 0.01 / 12;
           const pmiMonthly = pmiActiveBuy ? loanBal * 0.004 / 12 : 0;
           const housingCost = pi + taxMonthly + ins + pmiMonthly + maintMo + hoaMo;
-
           totalInterestPaid += interest;
-
           let extra = extraPP ? Math.max(0, monthlyBudget - housingCost) : 0;
           if (y === 0 && m === 0) extraYr1 = extra;
-
           const totalPrin = Math.min(stdPrincipal + extra, loanBal);
           loanBal -= totalPrin;
-          if (loanBal <= 0.01) {
-            loanBal = 0;
-            payoffMonth = y * 12 + m + 1;
-          }
-
-          // PMI auto-removal at 20% equity vs original price
+          if (loanBal <= 0.01) { loanBal = 0; payoffMonth = y * 12 + m + 1; }
           if ((price - loanBal) / price >= 0.20) pmiActiveBuy = false;
-
-          // SPY compounds monthly; no new contributions (cash going to principal)
           buySpy *= (1 + monthlyInvRate);
         } else {
-          // Loan paid off — surplus cash flow redirects to SPY
           const freedCash = extraPP ? Math.max(0, monthlyBudget - ongoingNonLoan) : 0;
           buySpy = buySpy * (1 + monthlyInvRate) + freedCash;
         }
       }
-
-      // ── WAIT simulation: annual ──
       const rentThisYear = rent0 * Math.pow(1 + rentRise, y) * 12;
       totalRentPaid += rentThisYear;
       waitSav = waitSav * (1 + invRet) + saveMonthly * 12 - rentThisYear;
@@ -360,11 +252,6 @@ function update() {
   const finalEquity = (price * Math.pow(1 + appr, years)) - loanBal;
   const finalBuySpy = buySpy;
 
-  // ── Future buy adjustment ──
-  // If user plans to buy same-type home at year N, they spend cash-at-close
-  // (down + closing on the future, higher price) out of their SPY balance.
-  // What's left: (SPY balance − future cash at close) + new home equity (= future down payment).
-  // Net effect: subtract just the closing costs (down payment converts to equity, not lost).
   const futurePrice       = price * Math.pow(1 + appr, years);
   const futureDownDollar  = futurePrice * downPct / 100;
   const futureClosing     = futurePrice * 0.02;
@@ -372,15 +259,12 @@ function update() {
 
   let finalWait;
   if (buyAfter) {
-    const rawWait = waitLine[years];
-    // Subtract the closing costs (real loss); down payment becomes equity in new home
-    finalWait = rawWait - futureClosing;
+    finalWait = waitLine[years] - futureClosing;
   } else {
     finalWait = waitLine[years];
   }
   const gap = finalBuy - finalWait;
 
-  // ── Compare card data ──
   $('c-buy-total').textContent = fmt(finalBuy);
 
   const buyTag  = $('c-buy-tag-text');
@@ -395,17 +279,8 @@ function update() {
     buyRows.innerHTML = `
       <div class="compare-row"><span class="lbl">Home equity</span><span class="val">${fmt(finalEquity)}</span></div>
       <div class="compare-row"><span class="lbl">SPY (compounded)</span><span class="val">${fmt(finalBuySpy)}</span></div>
-      <div class="compare-row"><span class="lbl">Extra principal (yr 1)</span><span class="val green">+${fmt(extraYr1)}/mo</span></div>
+      <div class="compare-row"><span class="lbl">Extra principal (yr 1)</span><span class="val tgreen">+${fmt(extraYr1)}/mo</span></div>
       <div class="compare-row"><span class="lbl">Loan status at yr ${years}</span><span class="val">${loanStatus}</span></div>
-      <div class="compare-row"><span class="lbl">Monthly housing cost (yr 1)</span><span class="val">${fmt(totalMonthly)}/mo</span></div>
-      <div class="compare-row"><span class="lbl">Total maintenance + HOA</span><span class="val red">-${fmt(totalMaintPaid)}</span></div>
-      <div class="compare-row"><span class="lbl">Cash needed at close</span><span class="val">${fmt(cashAtClose)}</span></div>
-    `;
-  } else {
-    buyTag.textContent = 'If you buy now';
-    buyRows.innerHTML = `
-      <div class="compare-row"><span class="lbl">Home equity</span><span class="val">${fmt(finalEquity)}</span></div>
-      <div class="compare-row"><span class="lbl">Leftover SPY (compounded)</span><span class="val">${fmt(finalBuySpy)}</span></div>
       <div class="compare-row"><span class="lbl">Monthly housing cost (yr 1)</span><span class="val">${fmt(totalMonthly)}/mo</span></div>
       <div class="compare-row"><span class="lbl">Total maintenance + HOA</span><span class="val red">-${fmt(totalMaintPaid)}</span></div>
       <div class="compare-row"><span class="lbl">Cash needed at close</span><span class="val">${fmt(cashAtClose)}</span></div>
@@ -414,7 +289,6 @@ function update() {
 
   $('c-wait-total').textContent = fmt(Math.max(0, finalWait));
 
-  // ── Wait column tag + rows: toggle-aware ──
   const waitTag  = $('c-wait-tag-text');
   const waitRows = $('c-wait-rows');
   const rawWaitSpy = waitLine[years];
@@ -432,22 +306,14 @@ function update() {
     waitRows.innerHTML = `
       <div class="compare-row"><span class="lbl">SPY before buying</span><span class="val">${fmt(rawWaitSpy)}</span></div>
       <div class="compare-row"><span class="lbl">Cash needed at close</span><span class="val red">-${fmt(futureCashAtClose)}</span></div>
-      <div class="compare-row"><span class="lbl">Down payment → home equity</span><span class="val green">+${fmt(equityInNewHome)}</span></div>
+      <div class="compare-row"><span class="lbl">Down payment → home equity</span><span class="val tgreen">+${fmt(equityInNewHome)}</span></div>
       <div class="compare-row"><span class="lbl">Closing costs</span><span class="val red">-${fmt(futureClosing)}</span></div>
       <div class="compare-row"><span class="lbl">Future home price</span><span class="val">${fmt(futurePrice)}</span></div>
       <div class="compare-row"><span class="lbl">New mortgage payment</span><span class="val">${fmt(newMortgageMonthly)}/mo</span></div>
     `;
-  } else {
-    waitTag.textContent = 'If you wait & save';
-    waitRows.innerHTML = `
-      <div class="compare-row"><span class="lbl">SPY balance (compounded)</span><span class="val">${fmt(Math.max(0, rawWaitSpy))}</span></div>
-      <div class="compare-row"><span class="lbl">Total rent paid</span><span class="val">${fmt(totalRentPaid)}</span></div>
-      <div class="compare-row"><span class="lbl">Monthly housing cost (yr 1)</span><span class="val">${fmt(rent0)}/mo</span></div>
-      <div class="compare-row"><span class="lbl">Future home price</span><span class="val">${fmt(futurePrice)}</span></div>
-    `;
   }
 
-  // ── Hero card ──
+  // Hero card
   const heroCard     = $('hero-card');
   const heroEyebrow  = $('hero-eyebrow');
   const heroNumber   = $('hero-number');
@@ -490,7 +356,7 @@ function update() {
     heroExplainer.textContent = `Leverage drives this: your ${fmt(cashAtClose)} cash at close controls a ${fmt(price)} asset appreciating at ${apprPct}%/yr.` + payoffSentence + ` Waiting and buying the same home at year ${years} would cost ${fmt(futurePrice)} with ${fmt(futureCashAtClose)} needed at close — and your savings don't compound fast enough to overcome that.`;
   }
 
-  // ── Chart ──
+  // Chart
   const isDark    = window.matchMedia('(prefers-color-scheme:dark)').matches;
   const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
   const tickColor = '#888780';
@@ -501,27 +367,8 @@ function update() {
     data: {
       labels,
       datasets: [
-        {
-          label: 'Buy now',
-          data: buyLine,
-          borderColor: '#1D9E75',
-          borderWidth: 2.5,
-          pointRadius: 4,
-          pointBackgroundColor: '#1D9E75',
-          fill: false,
-          tension: 0.25
-        },
-        {
-          label: 'Wait & save',
-          data: waitLine,
-          borderColor: '#378ADD',
-          borderWidth: 2.5,
-          borderDash: [6, 4],
-          pointRadius: 4,
-          pointBackgroundColor: '#378ADD',
-          fill: false,
-          tension: 0.25
-        }
+        { label: 'Buy now', data: buyLine, borderColor: '#1D9E75', borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#1D9E75', fill: false, tension: 0.25 },
+        { label: 'Wait & save', data: waitLine, borderColor: '#378ADD', borderWidth: 2.5, borderDash: [6, 4], pointRadius: 4, pointBackgroundColor: '#378ADD', fill: false, tension: 0.25 }
       ]
     },
     options: {
@@ -529,19 +376,14 @@ function update() {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ' ' + ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString()
-          }
-        }
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString() } }
       },
       scales: {
         x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 12 } } },
         y: {
           grid: { color: gridColor },
           ticks: {
-            color: tickColor,
-            font: { size: 12 },
+            color: tickColor, font: { size: 12 },
             callback: v => {
               if (Math.abs(v) >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
               if (Math.abs(v) >= 1000)    return '$' + (v/1000).toFixed(0) + 'K';
