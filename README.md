@@ -9,7 +9,6 @@ A personal collection of interactive calculators and references, served as a sta
 | Home | `index.html` | Landing page with links to all tools |
 | Affordability Calculator | `home_affordability_calculator_v6.html` | Estimate max home price from income & DTI |
 | Rent vs. Buy | `rent_vs_buy_calculator.html` | Long-term cost comparison with break-even chart |
-| Style Guide | `style_guide.html` | Personal wardrobe reference & color palette |
 
 ## Adding a new app
 
@@ -21,19 +20,19 @@ See [ADDING_APPS.md](ADDING_APPS.md) for step-by-step instructions.
 
 ### First-time setup
 
-1. Go to your repo on GitHub: `https://github.com/joshuaeup/claude-tools`
+1. Go to your repo on GitHub: `https://github.com/joshuaeup/toolbox`
 2. Click **Settings** → **Pages** (left sidebar)
 3. Under **Source**, select **Deploy from a branch**
 4. Set branch to `main`, folder to `/ (root)`, then click **Save**
 5. After ~60 seconds, your site will be live at:
-   **`https://joshuaeup.github.io/claude-tools/`**
+   **`https://joshuaeup.github.io/toolbox/`**
 
 ### Pushing updates
 
 Every push to `main` redeploys automatically:
 
 ```bash
-cd ~/Desktop/claude-tools-repo
+cd ~/Desktop/toolbox-repo
 git add .
 git commit -m "your message"
 git push
