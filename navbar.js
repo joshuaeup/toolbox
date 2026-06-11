@@ -29,24 +29,66 @@ const NAV_LINKS = [
   }
 
   const currentFile = location.pathname.split('/').pop() || 'index.html';
+  const currentLink = NAV_LINKS.find(({ href }) => href === currentFile) || NAV_LINKS[0];
 
+  // ── Navbar ──
   const nav = document.createElement('nav');
   nav.id = 'ct-navbar';
   nav.setAttribute('aria-label', 'Site navigation');
   nav.innerHTML = `
     <div class="ct-nav-inner">
       <a class="ct-nav-brand" href="index.html">Tools</a>
-      <div class="ct-nav-divider" aria-hidden="true"></div>
-      <ul class="ct-nav-links">
-        ${NAV_LINKS.map(({ href, label }) => {
-          const active = href === currentFile || (currentFile === '' && href === 'index.html');
-          return `<li><a href="${href}"${active ? ' class="ct-active" aria-current="page"' : ''}>${label}</a></li>`;
-        }).join('\n        ')}
-      </ul>
+      <span class="ct-nav-current">/ <span>${currentLink.label}</span></span>
+      <button class="ct-nav-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="ct-nav-dropdown">
+        Pages
+        <svg class="ct-nav-toggle-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="2,4 7,10 12,4"/>
+        </svg>
+      </button>
     </div>
   `;
-
   document.body.insertBefore(nav, document.body.firstChild);
+
+  // ── Dropdown ──
+  const dropdown = document.createElement('div');
+  dropdown.id = 'ct-nav-dropdown';
+  dropdown.setAttribute('role', 'menu');
+  dropdown.innerHTML = NAV_LINKS.map(({ href, label }) => {
+    const active = href === currentFile;
+    return `<a href="${href}" role="menuitem"${active ? ' class="ct-active" aria-current="page"' : ''}>${label}</a>`;
+  }).join('');
+  document.body.appendChild(dropdown);
+
+  // ── Backdrop ──
+  const backdrop = document.createElement('div');
+  backdrop.id = 'ct-nav-backdrop';
+  document.body.appendChild(backdrop);
+
+  // ── Toggle logic ──
+  const toggle = nav.querySelector('.ct-nav-toggle');
+
+  function openDropdown() {
+    dropdown.classList.add('ct-open');
+    backdrop.classList.add('ct-open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeDropdown() {
+    dropdown.classList.remove('ct-open');
+    backdrop.classList.remove('ct-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', () => {
+    dropdown.classList.contains('ct-open') ? closeDropdown() : openDropdown();
+  });
+
+  backdrop.addEventListener('click', closeDropdown);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDropdown();
+  });
+
   document.body.classList.add('ct-has-navbar');
 
   // ── Mobile tab bar (inputs / results) ──────────────────────────────────
