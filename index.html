@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Tools</title>
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f5f5f3;
+      --color-text-primary: #1a1a18;
+      --color-text-secondary: #5f5e5a;
+      --color-text-tertiary: #888780;
+      --color-border-tertiary: rgba(0,0,0,0.10);
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-background-secondary);
+      color: var(--color-text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+    .hero {
+      background: var(--color-background-primary);
+      border-bottom: 1px solid var(--color-border-tertiary);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #1D9E75;
+      margin-bottom: 0.75rem;
+    }
+    .hero-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .hero-sub {
+      font-size: 15px;
+      color: var(--color-text-secondary);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .grid-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .tool-card {
+      background: var(--color-background-primary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .tool-card:hover {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 0.25rem;
+    }
+    .icon-green { background: #E1F5EE; }
+    .icon-blue  { background: #E6F1FB; }
+    .icon-gold  { background: #FBF3E0; }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: -0.01em;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+    }
+    .card-arrow {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      font-size: 12px;
+      font-weight: 500;
+      color: #1D9E75;
+    }
+  </style>
+</head>
+<body>
+  <!-- navbar injected by navbar.js -->
+  <script src="navbar.js"></script>
+
+  <header class="hero">
+    <p class="hero-eyebrow">Claude Tools</p>
+    <h1 class="hero-title">Your personal toolkit</h1>
+    <p class="hero-sub">A collection of interactive calculators and references, built to help with real decisions.</p>
+  </header>
+
+  <main>
+    <div class="grid-wrap">
+
+      <a class="tool-card" href="home_affordability_calculator_v6.html">
+        <div class="card-icon icon-green">🏠</div>
+        <p class="card-title">Affordability Calculator</p>
+        <p class="card-desc">Estimate how much home you can afford based on income, debt load, and target DTI.</p>
+        <p class="card-arrow">Open →</p>
+      </a>
+
+      <a class="tool-card" href="rent_vs_buy_calculator.html">
+        <div class="card-icon icon-blue">⚖️</div>
+        <p class="card-title">Rent vs. Buy</p>
+        <p class="card-desc">Compare the true long-term cost of renting against buying with charts and break-even analysis.</p>
+        <p class="card-arrow">Open →</p>
+      </a>
+
+      <a class="tool-card" href="style_guide.html">
+        <div class="card-icon icon-gold">✨</div>
+        <p class="card-title">Style Guide</p>
+        <p class="card-desc">Personal wardrobe reference with outfit combinations, color palettes, and style rules.</p>
+        <p class="card-arrow">Open →</p>
+      </a>
+
+      <!-- ADD NEW TOOL CARDS HERE — see ADDING_APPS.md for instructions -->
+
+    </div>
+  </main>
+</body>
+</html>

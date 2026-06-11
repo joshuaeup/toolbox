@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Affordability Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f5f5f3;
+      --color-text-primary: #1a1a18;
+      --color-text-secondary: #5f5e5a;
+      --color-text-tertiary: #888780;
+      --color-border-tertiary: rgba(0,0,0,0.12);
+      --color-border-secondary: rgba(0,0,0,0.22);
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body { background: var(--color-background-secondary); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    .outer{display:flex;justify-content:center;padding:2rem 1.5rem;}
+    .root{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:100%;max-width:900px;align-items:start;font-family:var(--font-sans);}
+    .left-col{display:flex;flex-direction:column;}
+    .right-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:60px;}
+    .page-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;}
+    .page-sub{font-size:14px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:2rem;}
+    .ctrl-block{margin-bottom:1.75rem;}
+    .ctrl-tag{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:6px;}
+    .ctrl-val{font-size:28px;font-weight:500;color:var(--color-text-primary);margin-bottom:10px;line-height:1;}
+    .ctrl-val span{font-size:15px;font-weight:400;color:var(--color-text-secondary);margin-left:4px;}
+    .ctrl-sub{font-size:12px;color:var(--color-text-tertiary);margin-top:6px;}
+    .ctrl-cap{font-size:11px;color:#854F0B;margin-top:4px;background:#FAEEDA;padding:3px 8px;border-radius:4px;display:inline-block;}
+    input[type=range]{width:100%;accent-color:#1D9E75;}
+    .divider{height:0.5px;background:var(--color-border-tertiary);margin:0.25rem 0 1.75rem;}
+    .result-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:16px;padding:1.25rem 1.5rem;}
+    .result-card.accent{border:1.5px solid #1D9E75;}
+    .card-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+    .card-tag-icon{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+    .icon-green{background:#E1F5EE;color:#0F6E56;}
+    .icon-blue{background:#E6F1FB;color:#185FA5;}
+    .icon-amber{background:#FAEEDA;color:#854F0B;}
+    .icon-purple{background:#EEEDFE;color:#534AB7;}
+    .card-tag{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-tertiary);}
+    .card-big-val{font-size:36px;font-weight:500;line-height:1;margin-bottom:4px;}
+    .green{color:#1D9E75;}
+    .blue{color:#185FA5;}
+    .amber{color:#BA7517;}
+    .purple{color:#534AB7;}
+    .card-footnote{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--color-text-tertiary);margin-top:8px;}
+    .progress-wrap{margin:12px 0 6px;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;}
+    .progress-fill{height:100%;border-radius:3px;transition:width 0.2s,background 0.2s;}
+    .progress-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-tertiary);}
+    .breakdown-rows{margin-top:12px;border-top:0.5px solid var(--color-border-tertiary);padding-top:10px;}
+    .br-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
+    .br-label{font-size:13px;color:var(--color-text-secondary);}
+    .br-val{font-size:13px;font-weight:500;color:var(--color-text-primary);}
+    .br-total{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary);margin-top:4px;}
+    .br-total-label{font-size:14px;font-weight:500;color:var(--color-text-primary);}
+    .br-total-val{font-size:16px;font-weight:500;color:var(--color-text-primary);}
+    .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:4px 10px;border-radius:99px;margin-top:10px;}
+    .pill-green{background:#E1F5EE;color:#0F6E56;}
+    .pill-amber{background:#FAEEDA;color:#854F0B;}
+    .pill-red{background:#FCEBEB;color:#A32D2D;}
+    .two-stat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+    .stat-item .stat-label{font-size:11px;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+    .stat-item .stat-val{font-size:22px;font-weight:500;color:var(--color-text-primary);}
+    .stat-item .stat-sub{font-size:12px;color:var(--color-text-tertiary);}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+  </style>
+</head>
+<body>
+  <script src="navbar.js"></script>
+
+  <h2 class="sr-only">Home affordability calculator — Charlotte, NC</h2>
+
+  <div class="outer">
+  <div class="root">
+
+  <div class="left-col">
+    <p class="page-title">Home affordability calculator</p>
+    <p class="page-sub">Adjust the sliders to estimate how much home you can afford in Charlotte, NC based on your income, debt, and target DTI.</p>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">Annual salary</div>
+      <div class="ctrl-val" id="salaryVal">$160,000</div>
+      <input type="range" id="salary" min="80000" max="250000" step="1000" value="160000">
+    </div>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">401(k) contribution</div>
+      <div class="ctrl-val" id="k401Val">15.0% <span>— $23,500</span></div>
+      <input type="range" id="k401Pct" min="0" max="30" step="0.5" value="15">
+      <div id="k401Cap"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">Other monthly debt</div>
+      <div class="ctrl-val" id="otherDebtVal">$111</div>
+      <input type="range" id="otherDebt" min="0" max="2000" step="25" value="111">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">Target DTI</div>
+      <div class="ctrl-val" id="dtiVal">28.00%</div>
+      <input type="range" id="dti" min="15" max="43" step="0.01" value="28">
+      <div class="ctrl-sub">Conservative ≤22% · Traditional ≤28% · Lender max 43%</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">Interest rate</div>
+      <div class="ctrl-val" id="rateVal">6.8%</div>
+      <input type="range" id="rate" min="5.0" max="9.0" step="0.1" value="6.8">
+    </div>
+
+    <div class="ctrl-block">
+      <div class="ctrl-tag">Down payment</div>
+      <div class="ctrl-val" id="downVal">10% <span id="downSub">— $50,186</span></div>
+      <input type="range" id="down" min="3" max="20" step="1" value="10">
+      <div class="ctrl-sub" id="downNote">Based on max home price</div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="result-card accent">
+      <div class="card-tag-row">
+        <div class="card-tag-icon icon-green"><i class="ti ti-home" aria-hidden="true"></i></div>
+        <span class="card-tag">Max home price</span>
+      </div>
+      <div class="card-big-val green" id="rHomePrice">—</div>
+      <div class="card-footnote">
+        <span id="rDownNote">10% down · $50,186 needed</span>
+        <span id="rClosingNote">+$10,037 closing</span>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="card-tag-row">
+        <div class="card-tag-icon icon-blue"><i class="ti ti-receipt" aria-hidden="true"></i></div>
+        <span class="card-tag">Monthly payment</span>
+      </div>
+      <div class="card-big-val blue" id="rMonthly">—</div>
+      <div class="progress-wrap"><div class="progress-fill" id="pctFill"></div></div>
+      <div class="progress-labels"><span>0%</span><span id="pctLabel">—% of take-home</span><span>60%</span></div>
+      <div id="statusPill"></div>
+      <div class="breakdown-rows">
+        <div class="br-row"><span class="br-label">Principal + interest</span><span class="br-val" id="bPI">—</span></div>
+        <div class="br-row"><span class="br-label">Property tax (~1%)</span><span class="br-val" id="bTax">—</span></div>
+        <div class="br-row"><span class="br-label">Homeowners insurance</span><span class="br-val">$120/mo</span></div>
+        <div class="br-row"><span class="br-label">PMI</span><span class="br-val" id="bPMI">—</span></div>
+        <div class="br-total"><span class="br-total-label">Total</span><span class="br-total-val" id="bTotal">—</span></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="card-tag-row">
+        <div class="card-tag-icon icon-amber"><i class="ti ti-wallet" aria-hidden="true"></i></div>
+        <span class="card-tag">Take-home after mortgage</span>
+      </div>
+      <div class="two-stat">
+        <div class="stat-item">
+          <div class="stat-label">Monthly</div>
+          <div class="stat-val" id="rMonthlyLeft">—</div>
+          <div class="stat-sub">remaining</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Biweekly</div>
+          <div class="stat-val amber" id="rBiweeklyLeft">—</div>
+          <div class="stat-sub">per paycheck</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="card-tag-row">
+        <div class="card-tag-icon icon-purple"><i class="ti ti-chart-pie" aria-hidden="true"></i></div>
+        <span class="card-tag">Income snapshot</span>
+      </div>
+      <div class="two-stat">
+        <div class="stat-item">
+          <div class="stat-label">Monthly gross</div>
+          <div class="stat-val" id="rGross">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Monthly take-home</div>
+          <div class="stat-val purple" id="rTakeHome">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+
+  <script>
+  const fmt=v=>'$'+Math.round(v).toLocaleString();
+  const IRS_MAX=23500;
+
+  function calcTakeHome(salary,k401D){
+    const pre=Math.min(k401D,IRS_MAX);
+    const fedTax=Math.max(0,salary-pre-14600);
+    let fed=0;
+    const br=[[11600,.10],[35550,.12],[54975,.22],[103350,.24],[197300,.32],[243725,.35],[Infinity,.37]];
+    let prev=0;
+    for(const[top,r]of br){if(fedTax<=prev)break;fed+=(Math.min(fedTax,top)-prev)*r;prev=top;}
+    const nc=Math.max(0,salary-pre-10750)*0.0399;
+    const ss=Math.min(salary,176100)*0.062;
+    const med=salary*0.0145+(salary>200000?(salary-200000)*0.009:0);
+    return(salary-pre-fed-nc-ss-med)/12;
+  }
+
+  function calcMaxHomePrice(maxPmt,rate,downPct){
+    const mr=rate/100/12,n=360,ins=120,tr=0.01/12,hasPMI=downPct<20;
+    let lo=50000,hi=2000000;
+    for(let i=0;i<60;i++){
+      const mid=(lo+hi)/2,loan=mid*(1-downPct/100);
+      const pi=loan*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1);
+      const pmi=hasPMI?loan*0.004/12:0;
+      if(pi+mid*tr+ins+pmi<maxPmt)lo=mid;else hi=mid;
+    }
+    return(lo+hi)/2;
+  }
+
+  function update(){
+    const salary=+document.getElementById('salary').value;
+    const k401Pct=+document.getElementById('k401Pct').value;
+    const otherDebt=+document.getElementById('otherDebt').value;
+    const dtiTarget=+document.getElementById('dti').value/100;
+    const rate=+document.getElementById('rate').value;
+    const downPct=+document.getElementById('down').value;
+
+    const k401Raw=salary*(k401Pct/100);
+    const k401Actual=Math.min(k401Raw,IRS_MAX);
+    const capped=k401Raw>IRS_MAX;
+
+    document.getElementById('salaryVal').textContent=fmt(salary);
+    document.getElementById('k401Val').innerHTML=k401Pct.toFixed(1)+'% <span>— '+fmt(k401Actual)+'</span>';
+    const capEl=document.getElementById('k401Cap');
+    capEl.innerHTML=capped?'<div class="ctrl-cap">Capped at IRS max of $23,500</div>':'';
+    document.getElementById('otherDebtVal').textContent=fmt(otherDebt);
+    document.getElementById('dtiVal').textContent=(dtiTarget*100).toFixed(2)+'%';
+    document.getElementById('rateVal').textContent=rate.toFixed(1)+'%';
+
+    const monthlyGross=salary/12;
+    const monthlyTakeHome=calcTakeHome(salary,k401Actual);
+    const maxMortgage=Math.max(0,monthlyGross*dtiTarget-otherDebt);
+    const homePrice=calcMaxHomePrice(maxMortgage,rate,downPct);
+    const downDollar=homePrice*(downPct/100);
+    const closing=homePrice*0.02;
+
+    document.getElementById('downVal').innerHTML=downPct+'% <span>— '+fmt(downDollar)+'</span>';
+    document.getElementById('downNote').textContent='Based on max home price of '+fmt(homePrice);
+    document.getElementById('rHomePrice').textContent=fmt(homePrice);
+    document.getElementById('rDownNote').textContent=downPct+'% down · '+fmt(downDollar)+' needed';
+    document.getElementById('rClosingNote').textContent='+'+fmt(closing)+' closing';
+
+    const loan=homePrice*(1-downPct/100);
+    const mr=rate/100/12,n=360;
+    const pi=loan*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1);
+    const tax=homePrice*0.01/12;
+    const ins=120;
+    const pmi=downPct<20?loan*0.004/12:0;
+    const totalPmt=pi+tax+ins+pmi;
+    const pctOfTakeHome=(totalPmt/monthlyTakeHome)*100;
+    const leftMonthly=monthlyTakeHome-totalPmt;
+    const leftBiweekly=leftMonthly/2.167;
+
+    document.getElementById('rMonthly').textContent=fmt(totalPmt)+'/mo';
+    document.getElementById('rTakeHome').textContent=fmt(monthlyTakeHome)+'/mo';
+    document.getElementById('rGross').textContent=fmt(monthlyGross)+'/mo';
+    document.getElementById('rMonthlyLeft').textContent=fmt(leftMonthly);
+    document.getElementById('rBiweeklyLeft').textContent=fmt(leftBiweekly);
+
+    document.getElementById('bPI').textContent=fmt(pi)+'/mo';
+    document.getElementById('bTax').textContent=fmt(tax)+'/mo';
+    document.getElementById('bPMI').textContent=downPct<20?fmt(pmi)+'/mo':'None';
+    document.getElementById('bTotal').textContent=fmt(totalPmt)+'/mo';
+
+    const fillPct=Math.min(100,(pctOfTakeHome/60)*100);
+    let fillColor='#1D9E75';
+    if(pctOfTakeHome>45)fillColor='#E24B4A';
+    else if(pctOfTakeHome>36)fillColor='#EF9F27';
+    else if(pctOfTakeHome>28)fillColor='#378ADD';
+    document.getElementById('pctFill').style.width=fillPct+'%';
+    document.getElementById('pctFill').style.background=fillColor;
+    document.getElementById('pctLabel').textContent=pctOfTakeHome.toFixed(0)+'% of take-home';
+
+    let pillClass,pillIcon,pillText;
+    if(dtiTarget>0.36){pillClass='pill-red';pillIcon='ti-alert-triangle';pillText='High risk — above lender comfort zone';}
+    else if(dtiTarget>0.28){pillClass='pill-amber';pillIcon='ti-info-circle';pillText='Elevated — approaching upper limit';}
+    else{pillClass='pill-green';pillIcon='ti-circle-check';pillText='Healthy — well within safe range';}
+    document.getElementById('statusPill').innerHTML=`<div class="status-pill ${pillClass}"><i class="ti ${pillIcon}" aria-hidden="true"></i>${pillText}</div>`;
+  }
+
+  ['salary','k401Pct','otherDebt','dti','rate','down'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',update);
+  });
+  update();
+  </script>
+</body>
+</html>

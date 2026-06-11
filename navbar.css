@@ -1,0 +1,85 @@
+/* Shared navbar — included in every tool page */
+#ct-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#ct-navbar .ct-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 48px;
+}
+
+#ct-navbar .ct-nav-brand {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a18;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  margin-right: 1.5rem;
+  white-space: nowrap;
+}
+
+#ct-navbar .ct-nav-brand:hover { color: #1D9E75; }
+
+#ct-navbar .ct-nav-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(0,0,0,0.12);
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+#ct-navbar .ct-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+#ct-navbar .ct-nav-links::-webkit-scrollbar { display: none; }
+
+#ct-navbar .ct-nav-links li a {
+  display: block;
+  padding: 0 0.75rem;
+  height: 48px;
+  line-height: 48px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #5f5e5a;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+#ct-navbar .ct-nav-links li a:hover {
+  color: #1a1a18;
+  border-bottom-color: rgba(0,0,0,0.15);
+}
+
+#ct-navbar .ct-nav-links li a.ct-active {
+  color: #1D9E75;
+  font-weight: 500;
+  border-bottom-color: #1D9E75;
+}
+
+/* Push page content down so sticky nav doesn't overlap anything
+   that was already at the top */
+body.ct-has-navbar {
+  /* nothing needed — navbar is in-flow */
+}
