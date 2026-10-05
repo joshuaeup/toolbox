@@ -19,9 +19,9 @@
     --accent-light: #D6E6F2;
     --green: #4A6741;
     --green-light: #E4EDE3;
+    --orange: #8E5C3D;
+    --orange-light: #F2E4D6;
     --rule: #D9D4CE;
-    --done-bg: #E4EDE3;
-    --done-border: #4A6741;
   }
 
   body {
@@ -37,9 +37,7 @@
     padding: 2rem 1rem 3rem;
   }
 
-  header {
-    margin-bottom: 1.75rem;
-  }
+  header { margin-bottom: 1.75rem; }
 
   .eyebrow {
     font-size: 0.68rem;
@@ -57,10 +55,7 @@
     color: var(--ink);
   }
 
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  h1 em { font-style: italic; color: var(--accent); }
 
   .total-time {
     margin-top: 0.4rem;
@@ -72,7 +67,7 @@
     background: var(--rule);
     border-radius: 99px;
     height: 5px;
-    margin: 1.25rem 0 1.75rem;
+    margin: 1.25rem 0 0.6rem;
     overflow: hidden;
   }
 
@@ -101,6 +96,14 @@
     border-bottom: 1px solid var(--rule);
   }
 
+  .section-note {
+    font-size: 0.73rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.85rem;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
   .exercise-list {
     display: flex;
     flex-direction: column;
@@ -123,9 +126,17 @@
   }
 
   .exercise-card.done {
-    background: var(--done-bg);
-    border-color: var(--done-border);
-    opacity: 0.75;
+    background: var(--green-light);
+    border-color: var(--green);
+    opacity: 0.72;
+  }
+
+  .exercise-card.new-exercise {
+    border-left: 3px solid var(--orange);
+  }
+
+  .exercise-card.new-exercise.done {
+    border-left: 3px solid var(--green);
   }
 
   .check-circle {
@@ -146,17 +157,10 @@
     border-color: var(--green);
   }
 
-  .checkmark {
-    display: none;
-  }
+  .checkmark { display: none; }
+  .exercise-card.done .checkmark { display: block; }
 
-  .exercise-card.done .checkmark {
-    display: block;
-  }
-
-  .exercise-info {
-    flex: 1;
-  }
+  .exercise-info { flex: 1; }
 
   .exercise-name {
     font-family: 'DM Serif Display', serif;
@@ -177,6 +181,19 @@
     line-height: 1.4;
   }
 
+  .new-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    background: var(--orange-light);
+    border-radius: 99px;
+    padding: 0.15rem 0.45rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+
   .exercise-time {
     font-size: 0.72rem;
     font-weight: 600;
@@ -185,9 +202,7 @@
     flex-shrink: 0;
   }
 
-  .exercise-card.done .exercise-time {
-    color: var(--green);
-  }
+  .exercise-card.done .exercise-time { color: var(--green); }
 
   .reset-btn {
     width: 100%;
@@ -243,6 +258,17 @@
     margin-top: 1.5rem;
     font-weight: 500;
   }
+
+  .why-box {
+    background: var(--orange-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    color: var(--orange);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+    font-weight: 500;
+  }
 </style>
 </head>
 <body>
@@ -250,21 +276,26 @@
 <div class="container">
 
   <header>
-    <p class="eyebrow">Daily Recovery</p>
+    <p class="eyebrow">Daily Recovery · Updated</p>
     <h1>Morning <em>Routine</em></h1>
-    <p class="total-time">8 minutes total · Do before you sit down for the day</p>
+    <p class="total-time">12 minutes total · Do before you sit down for the day</p>
   </header>
+
+  <div class="why-box">
+    3 new exercises added to address your anterior pelvic tilt. These target tight hip flexors and a weak core, the two root causes of your lower back arch and lower back pain.
+  </div>
 
   <div class="progress-bar-wrap">
     <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
   </div>
-  <p class="progress-label" id="progressLabel">0 of 6 complete</p>
+  <p class="progress-label" id="progressLabel">0 of 9 complete</p>
 
   <div id="completionBanner" class="completion-banner">
     <p>Routine complete.</p>
     <span>Great work. Your body will thank you.</span>
   </div>
 
+  <!-- SECTION 1: MOBILITY -->
   <p class="section-label">Mobility First</p>
   <div class="exercise-list">
 
@@ -307,6 +338,38 @@
       <span class="exercise-time">1 min</span>
     </div>
 
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Kneeling Hip Flexor Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Kneel on one knee, push hips forward gently until you feel a stretch at the front of the hip. Keep your back upright. Both sides · 45 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Lying Quad Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie face down. Bend one knee and gently pull your foot toward your glute with your hand. Feel the stretch along the front of the thigh. Both sides · 30 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: CORE AND ACTIVATION -->
+  <p class="section-label">Core and Activation Second</p>
+  <div class="exercise-list">
+
     <div class="exercise-card" onclick="toggle(this)">
       <div class="check-circle">
         <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -315,14 +378,28 @@
       </div>
       <div class="exercise-info">
         <p class="exercise-name">Pelvic Tilts</p>
-        <p class="exercise-detail">2 sets of 15 reps</p>
+        <p class="exercise-detail">2 sets of 15 reps · press lower back flat into floor</p>
       </div>
       <span class="exercise-time">1.5 mins</span>
     </div>
 
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Dead Bug <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie on your back, arms pointing up, knees bent at 90 degrees. Slowly lower one arm overhead while extending the opposite leg, keeping your lower back pressed flat. Return and alternate. 2 sets of 8 reps each side.</p>
+      </div>
+      <span class="exercise-time">2 mins</span>
+    </div>
+
   </div>
 
-  <p class="section-label">Strengthening Second</p>
+  <!-- SECTION 3: STRENGTHENING -->
+  <p class="section-label">Strengthening Last</p>
   <div class="exercise-list">
 
     <div class="exercise-card" onclick="toggle(this)">
@@ -356,7 +433,7 @@
   <button class="reset-btn" onclick="resetAll()">Reset for tomorrow</button>
 
   <div class="tip-box">
-    Stop any exercise that causes sharp tailbone pain. Mild tension is fine. Do this before sitting down, while you still feel good.
+    Stop any exercise that causes sharp tailbone pain. Mild tension is fine. The dead bug is the hardest one here — go slow and focus on keeping your lower back flat throughout.
   </div>
 
 </div>
