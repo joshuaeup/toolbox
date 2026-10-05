@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Routine</title>
+<link rel="stylesheet" href="navbar.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F0EDE8;
+    --surface: #FAFAF8;
+    --ink: #1C1A18;
+    --ink-soft: #6B6560;
+    --accent: #3D6B8E;
+    --accent-light: #D6E6F2;
+    --green: #4A6741;
+    --green-light: #E4EDE3;
+    --orange: #8E5C3D;
+    --orange-light: #F2E4D6;
+    --rule: #D9D4CE;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+  }
+
+  header { margin-bottom: 1.75rem; }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .total-time {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .progress-bar-wrap {
+    background: var(--rule);
+    border-radius: 99px;
+    height: 5px;
+    margin: 1.25rem 0 0.6rem;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-note {
+    font-size: 0.73rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.85rem;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, opacity 0.25s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .exercise-card.done {
+    background: var(--green-light);
+    border-color: var(--green);
+    opacity: 0.72;
+  }
+
+  .exercise-card.new-exercise {
+    border-left: 3px solid var(--orange);
+  }
+
+  .exercise-card.new-exercise.done {
+    border-left: 3px solid var(--green);
+  }
+
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--rule);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    background: transparent;
+  }
+
+  .exercise-card.done .check-circle {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .checkmark { display: none; }
+  .exercise-card.done .checkmark { display: block; }
+
+  .exercise-info { flex: 1; }
+
+  .exercise-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+  }
+
+  .exercise-card.done .exercise-name {
+    text-decoration: line-through;
+    color: var(--ink-soft);
+  }
+
+  .exercise-detail {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .new-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    background: var(--orange-light);
+    border-radius: 99px;
+    padding: 0.15rem 0.45rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .exercise-time {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .exercise-card.done .exercise-time { color: var(--green); }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.2s;
+  }
+
+  .reset-btn:hover { background: var(--rule); }
+
+  .completion-banner {
+    display: none;
+    background: var(--green-light);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .completion-banner.visible { display: block; }
+
+  .completion-banner p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--green);
+  }
+
+  .completion-banner span {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    display: block;
+    margin-top: 0.2rem;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .tip-box {
+    background: var(--accent-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    font-weight: 500;
+  }
+
+  .why-box {
+    background: var(--orange-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    color: var(--orange);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+<script src="navbar.js"></script>
+<div class="container">
+
+  <header>
+    <p class="eyebrow">Daily Recovery · Updated</p>
+    <h1>Morning <em>Routine</em></h1>
+    <p class="total-time">12 minutes total · Do before you sit down for the day</p>
+  </header>
+
+  <div class="why-box">
+    3 new exercises added to address your anterior pelvic tilt. These target tight hip flexors and a weak core, the two root causes of your lower back arch and lower back pain.
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+  </div>
+  <p class="progress-label" id="progressLabel">0 of 9 complete</p>
+
+  <div id="completionBanner" class="completion-banner">
+    <p>Routine complete.</p>
+    <span>Great work. Your body will thank you.</span>
+  </div>
+
+  <!-- SECTION 1: MOBILITY -->
+  <p class="section-label">Mobility First</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Knee to Chest</p>
+        <p class="exercise-detail">Both sides · 30 sec hold each</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Figure Four</p>
+        <p class="exercise-detail">Both sides · 45 sec hold each</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Child's Pose</p>
+        <p class="exercise-detail">Hold for 60 seconds</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Kneeling Hip Flexor Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Kneel on one knee, push hips forward gently until you feel a stretch at the front of the hip. Keep your back upright. Both sides · 45 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Lying Quad Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie face down. Bend one knee and gently pull your foot toward your glute with your hand. Feel the stretch along the front of the thigh. Both sides · 30 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: CORE AND ACTIVATION -->
+  <p class="section-label">Core and Activation Second</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Pelvic Tilts</p>
+        <p class="exercise-detail">2 sets of 15 reps · press lower back flat into floor</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Dead Bug <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie on your back, arms pointing up, knees bent at 90 degrees. Slowly lower one arm overhead while extending the opposite leg, keeping your lower back pressed flat. Return and alternate. 2 sets of 8 reps each side.</p>
+      </div>
+      <span class="exercise-time">2 mins</span>
+    </div>
+
+  </div>
+
+  <!-- SECTION 3: STRENGTHENING -->
+  <p class="section-label">Strengthening Last</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Glute Bridge</p>
+        <p class="exercise-detail">2 sets of 10 reps · slow and controlled</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Clamshells</p>
+        <p class="exercise-detail">Both sides · 2 sets of 12 reps each</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+    </div>
+
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">Reset for tomorrow</button>
+
+  <div class="tip-box">
+    Stop any exercise that causes sharp tailbone pain. Mild tension is fine. The dead bug is the hardest one here — go slow and focus on keeping your lower back flat throughout.
+  </div>
+
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.exercise-card');
+  const total = cards.length;
+
+  function toggle(card) {
+    card.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const done = document.querySelectorAll('.exercise-card.done').length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = done + ' of ' + total + ' complete';
+    document.getElementById('completionBanner').classList.toggle('visible', done === total);
+  }
+
+  function resetAll() {
+    cards.forEach(c => c.classList.remove('done'));
+    updateProgress();
+  }
+</script>
+</body>
+</html>

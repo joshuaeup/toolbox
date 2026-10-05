@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: 'index.html',                          label: 'Home' },
   { href: 'home_affordability_calculator_v6.html', label: 'Affordability Calculator' },
   { href: 'rent_vs_buy_calculator.html',          label: 'Rent vs. Buy' },
+  { href: 'daily_routine_card.html',              label: 'Morning Routine' },
   // ↑ ADD NEW APPS HERE
 ];
 
