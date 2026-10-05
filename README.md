@@ -9,6 +9,7 @@ A personal collection of interactive calculators and references, served as a sta
 | Home | `index.html` | Landing page with links to all tools |
 | Affordability Calculator | `home_affordability_calculator_v6.html` | Estimate max home price from income & DTI |
 | Rent vs. Buy | `rent_vs_buy_calculator.html` | Long-term cost comparison with break-even chart |
+| Morning Routine | `daily_routine_card.html` | Daily mobility & strengthening checklist with progress tracking |
 
 ## Adding a new app
 
