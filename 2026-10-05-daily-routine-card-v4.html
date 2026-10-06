@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Routine</title>
+<link rel="stylesheet" href="navbar.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F0EDE8;
+    --surface: #FAFAF8;
+    --ink: #1C1A18;
+    --ink-soft: #6B6560;
+    --accent: #3D6B8E;
+    --accent-light: #D6E6F2;
+    --green: #4A6741;
+    --green-light: #E4EDE3;
+    --orange: #8E5C3D;
+    --orange-light: #F2E4D6;
+    --rule: #D9D4CE;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+  }
+
+  header { margin-bottom: 1.75rem; }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .total-time {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .progress-bar-wrap {
+    background: var(--rule);
+    border-radius: 99px;
+    height: 5px;
+    margin: 1.25rem 0 0.6rem;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-note {
+    font-size: 0.73rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.85rem;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, opacity 0.25s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .exercise-card.done {
+    background: var(--green-light);
+    border-color: var(--green);
+    opacity: 0.72;
+  }
+
+  .exercise-card.new-exercise {
+    border-left: 3px solid var(--orange);
+  }
+
+  .exercise-card.new-exercise.done {
+    border-left: 3px solid var(--green);
+  }
+
+  .check-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--rule);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    background: transparent;
+  }
+
+  .exercise-card.done .check-circle {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .checkmark { display: none; }
+  .exercise-card.done .checkmark { display: block; }
+
+  .exercise-info { flex: 1; }
+
+  .exercise-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+  }
+
+  .exercise-card.done .exercise-name {
+    text-decoration: line-through;
+    color: var(--ink-soft);
+  }
+
+  .exercise-detail {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .new-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    background: var(--orange-light);
+    border-radius: 99px;
+    padding: 0.15rem 0.45rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .exercise-time {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .exercise-card.done .exercise-time { color: var(--green); }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.2s;
+  }
+
+  .reset-btn:hover { background: var(--rule); }
+
+  .completion-banner {
+    display: none;
+    background: var(--green-light);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .completion-banner.visible { display: block; }
+
+  .completion-banner p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--green);
+  }
+
+  .completion-banner span {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    display: block;
+    margin-top: 0.2rem;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .tip-box {
+    background: var(--accent-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    font-weight: 500;
+  }
+
+  .why-box {
+    background: var(--orange-light);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.78rem;
+    color: var(--orange);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+    font-weight: 500;
+  }
+
+  /* ---- animated demonstrations ---- */
+  .exercise-card { flex-wrap: wrap; row-gap: 0.8rem; }
+
+  .demo {
+    flex: 0 0 100%;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 0.35rem 0.45rem 0.4rem;
+  }
+
+  .demo-svg { display: block; width: 100%; height: auto; }
+
+  .demo-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.2rem 0.15rem 0;
+  }
+
+  .demo-phase {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    min-height: 1em;
+  }
+
+  .demo-btn {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .demo-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .exercise-card.done .demo-phase { color: var(--green); }
+</style>
+</head>
+<body>
+<script src="navbar.js"></script>
+<div class="container">
+
+  <header>
+    <p class="eyebrow">Daily Recovery · Updated</p>
+    <h1>Morning <em>Routine</em></h1>
+    <p class="total-time">12 minutes total · Do before you sit down for the day</p>
+  </header>
+
+  <div class="why-box">
+    3 new exercises added to address your anterior pelvic tilt. These target tight hip flexors and a weak core, the two root causes of your lower back arch and lower back pain.
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+  </div>
+  <p class="progress-label" id="progressLabel">0 of 9 complete</p>
+
+  <div id="completionBanner" class="completion-banner">
+    <p>Routine complete.</p>
+    <span>Great work. Your body will thank you.</span>
+  </div>
+
+  <!-- SECTION 1: MOBILITY -->
+  <p class="section-label">Mobility First</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Knee to Chest</p>
+        <p class="exercise-detail">Both sides · 30 sec hold each</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+      <div class="demo" data-ex="kneeToChest"></div>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Figure Four</p>
+        <p class="exercise-detail">Both sides · 45 sec hold each</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+      <div class="demo" data-ex="figureFour"></div>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Child's Pose</p>
+        <p class="exercise-detail">Hold for 60 seconds</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+      <div class="demo" data-ex="childsPose"></div>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Kneeling Hip Flexor Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Kneel on one knee, push hips forward gently until you feel a stretch at the front of the hip. Keep your back upright. Both sides · 45 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+      <div class="demo" data-ex="hipFlexor"></div>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Lying Quad Stretch <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie face down. Bend one knee and gently pull your foot toward your glute with your hand. Feel the stretch along the front of the thigh. Both sides · 30 sec hold each.</p>
+      </div>
+      <span class="exercise-time">1 min</span>
+      <div class="demo" data-ex="quadStretch"></div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 2: CORE AND ACTIVATION -->
+  <p class="section-label">Core and Activation Second</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Pelvic Tilts</p>
+        <p class="exercise-detail">2 sets of 15 reps · press lower back flat into floor</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+      <div class="demo" data-ex="pelvicTilt"></div>
+    </div>
+
+    <div class="exercise-card new-exercise" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Dead Bug <span class="new-badge">New</span></p>
+        <p class="exercise-detail">Lie on your back, arms pointing up, knees bent at 90 degrees. Slowly lower one arm overhead while extending the opposite leg, keeping your lower back pressed flat. Return and alternate. 2 sets of 8 reps each side.</p>
+      </div>
+      <span class="exercise-time">2 mins</span>
+      <div class="demo" data-ex="deadBug"></div>
+    </div>
+
+  </div>
+
+  <!-- SECTION 3: STRENGTHENING -->
+  <p class="section-label">Strengthening Last</p>
+  <div class="exercise-list">
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Glute Bridge</p>
+        <p class="exercise-detail">2 sets of 10 reps · slow and controlled</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+      <div class="demo" data-ex="gluteBridge"></div>
+    </div>
+
+    <div class="exercise-card" onclick="toggle(this)">
+      <div class="check-circle">
+        <svg class="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="exercise-info">
+        <p class="exercise-name">Clamshells</p>
+        <p class="exercise-detail">Both sides · 2 sets of 12 reps each</p>
+      </div>
+      <span class="exercise-time">1.5 mins</span>
+      <div class="demo" data-ex="clamshell"></div>
+    </div>
+
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">Reset for tomorrow</button>
+
+  <div class="tip-box">
+    Stop any exercise that causes sharp tailbone pain. Mild tension is fine. The dead bug is the hardest one here — go slow and focus on keeping your lower back flat throughout.
+  </div>
+
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.exercise-card');
+  const total = cards.length;
+
+  function toggle(card) {
+    card.classList.toggle('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const done = document.querySelectorAll('.exercise-card.done').length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = done + ' of ' + total + ' complete';
+    document.getElementById('completionBanner').classList.toggle('visible', done === total);
+  }
+
+  function resetAll() {
+    cards.forEach(c => c.classList.remove('done'));
+    updateProgress();
+  }
+</script>
+
+<script>
+/* Figure engine: articulated body, forward + two-bone inverse kinematics, exercise keyframes */
+(function (G) {
+  'use strict';
+  // ---------- math ----------
+  const DEG = Math.PI / 180;
+  const sind = d => Math.sin(d * DEG), cosd = d => Math.cos(d * DEG);
+  const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const scl = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const crs = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const len = a => Math.hypot(a[0], a[1], a[2]);
+  const nrm = a => { const l = len(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  // 3x3 matrices, row-major; columns are the local axes expressed in world space
+  const mm = (a, b) => {
+    const o = new Array(9);
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++)
+      o[r * 3 + c] = a[r * 3] * b[c] + a[r * 3 + 1] * b[3 + c] + a[r * 3 + 2] * b[6 + c];
+    return o;
+  };
+  const mv = (m, v) => [m[0] * v[0] + m[1] * v[1] + m[2] * v[2], m[3] * v[0] + m[4] * v[1] + m[5] * v[2], m[6] * v[0] + m[7] * v[1] + m[8] * v[2]];
+  const rx = d => { const c = cosd(d), s = sind(d); return [1, 0, 0, 0, c, -s, 0, s, c]; };
+  const ry = d => { const c = cosd(d), s = sind(d); return [c, 0, s, 0, 1, 0, -s, 0, c]; };
+  const rz = d => { const c = cosd(d), s = sind(d); return [c, -s, 0, s, c, 0, 0, 0, 1]; };
+  const cols = (x, y, z) => [x[0], y[0], z[0], x[1], y[1], z[1], x[2], y[2], z[2]];
+  const col = (m, i) => [m[i], m[3 + i], m[6 + i]];
+  // orthonormal frame with X along fwd and Y as close to up as possible
+  const frame = (fwd, up) => {
+    const x = nrm(fwd);
+    const y = nrm(sub(up, scl(x, dot(up, x))));
+    return cols(x, y, crs(x, y));
+  };
+  // rotate v about unit axis k by deg (Rodrigues)
+  const rotAxis = (v, k, d) => {
+    const c = cosd(d), s = sind(d);
+    return add(add(scl(v, c), scl(crs(k, v), s)), scl(k, dot(k, v) * (1 - c)));
+  };
+  const perpAny = u => nrm(Math.abs(u[1]) < 0.9 ? crs(u, [0, 1, 0]) : crs(u, [1, 0, 0]));
+  const val = (x, sk) => (typeof x === 'function' ? x(sk) : x);
+
+  // ---------- body (units: 1 = ~0.85 cm; standing height ~200) ----------
+  // Body frame: X = anterior, Y = superior, Z = subject's right.
+  const B = {
+    pelvis: { a: [-2, -2, 0], b: [-2, 12, 0], r: [12, 11.5], w: [17, 15] },
+    lumbar: { len: 18, r: [11.8, 11.8], w: [15, 14.5] },
+    thorax: { len: 19, r: [11.4, 12.6], w: [14.5, 17.5] },
+    upper: { len: 13, r: [12.6, 10.2], w: [17.5, 15.5] },
+    neck: { len: 9, r: [5.4, 5.2] },
+    head: { c: [-0.3, 11.5, 0], ax: [10.8, 13, 8.8], nose: [10.4, -1, 0], noseR: 2.4 },
+    hipZ: 10,
+    thigh: { len: 48, r: [9, 6.5] },
+    shin: { len: 47, r: [6.3, 4.1] },
+    foot: { heel: [-3.5, -4.6, 0], toe: [20, -5.4, 0], r: [4.2, 3.2] },
+    shoulder: [1.5, -5, 18],
+    upperArm: { len: 36, r: [5.4, 4.4] },
+    forearm: { len: 28, r: [4.3, 3.3] },
+    hand: { len: 15, r: [3.4, 2.6] },
+  };
+  const ANKLE_H = 8.8; // ankle centre height with the foot flat
+
+  const sgn = side => (side === 'R' ? 1 : -1);
+
+  // two-bone IK: root A, target T, pole = direction the middle joint should bulge toward
+  function ik2(A, T, l1, l2, pole) {
+    const d = sub(T, A);
+    const dist = len(d);
+    const dd = clamp(dist, Math.abs(l1 - l2) + 0.01, l1 + l2 - 0.01);
+    const u = dist > 1e-6 ? scl(d, 1 / dist) : [0, -1, 0];
+    let p = sub(pole, scl(u, dot(pole, u)));
+    p = len(p) < 1e-6 ? perpAny(u) : nrm(p);
+    const a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd);
+    const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+    const J = add(A, add(scl(u, a), scl(p, h)));
+    const E = add(A, scl(u, dd));
+    return { J, E, p, miss: len(sub(E, T)) };
+  }
+  // bone frames for an IK chain. hinge +1 = knee (bulges anteriorly), -1 = elbow (bulges posteriorly)
+  function chainFrames(A, J, E, p, hinge) {
+    const d1 = nrm(sub(J, A)), d2 = nrm(sub(E, J));
+    let Z = hinge > 0 ? crs(d1, p) : crs(p, d1);
+    Z = len(Z) < 1e-6 ? perpAny(d1) : nrm(Z);
+    const Y1 = scl(d1, -1), Y2 = scl(d2, -1);
+    return [cols(crs(Y1, Z), Y1, Z), cols(nrm(crs(Y2, Z)), Y2, Z)];
+  }
+
+  // pole that puts the middle joint of chain A->T at height y, on the side of `side`
+  function poleForY(A, T, l1, l2, y, side) {
+    const d = sub(T, A), dist = len(d), u = scl(d, 1 / dist);
+    const a = (l1 * l1 - l2 * l2 + dist * dist) / (2 * dist);
+    const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+    const c = add(A, scl(u, a));
+    const e1 = nrm(sub(side, scl(u, dot(side, u)))), e2 = crs(u, e1);
+    // c.y + h*(e1.y cos f + e2.y sin f) = y
+    const R = h * Math.hypot(e1[1], e2[1]), ph = Math.atan2(e2[1], e1[1]);
+    const k = clamp((y - c[1]) / (R || 1), -1, 1);
+    const f1 = ph + Math.acos(k), f2 = ph - Math.acos(k);
+    const pick = Math.cos(f1) >= Math.cos(f2) ? f1 : f2;
+    return add(scl(e1, Math.cos(pick)), scl(e2, Math.sin(pick)));
+  }
+  function cap(name, part, a, b, r, w, M) { return { kind: 'cap', name, part, a, b, r, w, M }; }
+
+  // ---------- pose solver ----------
+  // spec: front, head (world dirs of body X/Y), rotZ (world deg), tilt (pelvis, + = posterior),
+  //       spine{lumbar,thorax,upper,neck,head,neckLat,headTurn} (+ = flexion),
+  //       anchor{joint, at:[x, y|null(settle), z]}, legs{R,L}, arms{R,L}, shOffR/L, breath, order
+  function solve(spec) {
+    const sk = { j: {}, m: {}, segs: [], misses: [], twist: [] };
+    let W = frame(spec.front, spec.head);
+    if (spec.rotZ) W = mm(rz(spec.rotZ), W);
+    const P = mm(W, rz(spec.tilt || 0));
+    const sp = Object.assign({ lumbar: 0, thorax: 0, upper: 0, neck: 0, head: 0, neckLat: 0, headTurn: 0 }, spec.spine);
+    const j = sk.j, m = sk.m;
+    j.hip = [0, 0, 0];
+    j.pelA = mv(P, B.pelvis.a);
+    j.pelB = mv(P, B.pelvis.b);
+    m.P = P;
+    m.L = mm(P, rz(-sp.lumbar)); j.lumE = add(j.pelB, mv(m.L, [0, B.lumbar.len, 0]));
+    m.T = mm(m.L, rz(-sp.thorax)); j.thoE = add(j.lumE, mv(m.T, [0, B.thorax.len, 0]));
+    m.U = mm(m.T, rz(-sp.upper)); j.upE = add(j.thoE, mv(m.U, [0, B.upper.len, 0]));
+    m.N = mm(m.U, mm(rz(-sp.neck), rx(sp.neckLat))); j.neckE = add(j.upE, mv(m.N, [0, B.neck.len, 0]));
+    m.H = mm(m.N, mm(rz(-sp.head), ry(sp.headTurn))); j.headC = add(j.neckE, mv(m.H, B.head.c));
+    j.nose = add(j.headC, mv(m.H, B.head.nose));
+    for (const S of ['R', 'L']) {
+      const s = sgn(S);
+      j['hip' + S] = mv(P, [0, 0, s * B.hipZ]);
+      const off = spec['shOff' + S] || [0, 0, 0];
+      j['sh' + S] = add(j.upE, mv(m.U, add([B.shoulder[0], B.shoulder[1], s * B.shoulder[2]], off)));
+    }
+    const breath = spec.breath || 0;
+    const torsoSegs = [
+      cap('pelvis', 'torso', j.pelA, j.pelB, B.pelvis.r, B.pelvis.w, P),
+      cap('lumbar', 'torso', j.pelB, j.lumE, B.lumbar.r, B.lumbar.w, m.L),
+      cap('thorax', 'torso', j.lumE, j.thoE, B.thorax.r.map(r => r * (1 + 0.07 * breath)), B.thorax.w, m.T),
+      cap('upper', 'torso', j.thoE, j.upE, B.upper.r.map(r => r * (1 + 0.05 * breath)), B.upper.w, m.U),
+      cap('neck', 'torso', j.upE, j.neckE, B.neck.r, null, m.N),
+      { kind: 'ell', name: 'head', part: 'torso', c: j.headC, M: m.H, ax: B.head.ax },
+      { kind: 'cap', name: 'nose', part: 'torso', a: j.nose, b: j.nose, r: [B.head.noseR, B.head.noseR], w: null, M: m.H },
+    ];
+
+    // forward-kinematic limbs (before anchoring)
+    const legs = spec.legs || {}, arms = spec.arms || {};
+    const fkSegs = [];
+    sk.legFK = (S, ang) => legFK(sk, S, ang);
+    sk.armFK = (S, ang) => armFK(sk, S, ang);
+    for (const S of ['R', 'L']) {
+      if (legs[S] && !legs[S].ik) { storeLeg(sk, S, legFK(sk, S, legs[S])); fkSegs.push(...legSegs(sk, S)); }
+      if (arms[S] && !arms[S].ik) { storeArm(sk, S, armFK(sk, S, arms[S])); fkSegs.push(...armSegs(sk, S)); }
+    }
+
+    // anchor + settle onto the floor (y = 0)
+    const an = spec.anchor || { joint: 'hip', at: [0, null, 0] };
+    const ref = j[an.joint];
+    const T = [an.at[0] - ref[0], 0, an.at[2] - ref[2]];
+    if (an.at[1] === null || an.at[1] === undefined) {
+      let mn = Infinity;
+      const pool = spec.settle === 'trunk' ? torsoSegs.slice(0, 4) : spec.settle === 'torso' ? torsoSegs : torsoSegs.concat(fkSegs);
+      for (const s of pool) mn = Math.min(mn, bottom(s));
+      T[1] = -mn + (spec.lift || 0);
+    } else T[1] = an.at[1] - ref[1];
+    for (const k in j) j[k] = add(j[k], T);
+    sk.offset = T;
+
+    // inverse-kinematic limbs (targets are in world space)
+    const order = spec.order || ['R', 'L'];
+    for (const S of order) if (legs[S] && legs[S].ik) ikLeg(sk, S, legs[S].ik);
+    for (const S of order) if (arms[S] && arms[S].ik) ikArm(sk, S, arms[S].ik);
+
+    sk.segs = torsoSegs.map(s => (s.kind === 'ell' ? Object.assign({}, s, { c: j.headC }) : Object.assign({}, s, { a: j[segJ[s.name][0]], b: j[segJ[s.name][1]] })));
+    for (const S of ['R', 'L']) {
+      if (legs[S]) sk.segs.push(...legSegs(sk, S));
+      if (arms[S]) sk.segs.push(...armSegs(sk, S));
+    }
+    // highlights
+    sk.hl = (spec.hl || []).filter(h => h.alpha > 0.01).map(h => ({ part: h.part, a: val(h.a, sk), b: val(h.b, sk), r: h.r, alpha: h.alpha }));
+    sk.spec = spec;
+    return sk;
+  }
+  const segJ = { pelvis: ['pelA', 'pelB'], lumbar: ['pelB', 'lumE'], thorax: ['lumE', 'thoE'], upper: ['thoE', 'upE'], neck: ['upE', 'neckE'], nose: ['nose', 'nose'] };
+
+  function legFK(sk, S, ang) {
+    const s = sgn(S), h = ang.hip || [0, 0, 0];
+    const Th = mm(sk.m.P, mm(rz(h[0]), mm(rx(-s * (h[1] || 0)), ry(-s * (h[2] || 0)))));
+    const hip = sk.j['hip' + S];
+    const knee = add(hip, mv(Th, [0, -B.thigh.len, 0]));
+    const Sh = mm(Th, rz(-(ang.knee || 0)));
+    const ankle = add(knee, mv(Sh, [0, -B.shin.len, 0]));
+    const Ft = mm(Sh, rz(ang.ankle || 0));
+    return { Th, Sh, Ft, knee, ankle };
+  }
+  function storeLeg(sk, S, r) {
+    sk.m['thigh' + S] = r.Th; sk.m['shin' + S] = r.Sh; sk.m['foot' + S] = r.Ft;
+    sk.j['knee' + S] = r.knee; sk.j['ankle' + S] = r.ankle;
+    sk.j['heel' + S] = add(r.ankle, mv(r.Ft, B.foot.heel));
+    sk.j['toe' + S] = add(r.ankle, mv(r.Ft, B.foot.toe));
+  }
+  function legSegs(sk, S) {
+    const j = sk.j, m = sk.m;
+    return [
+      cap('thigh' + S, 'leg' + S, j['hip' + S], j['knee' + S], B.thigh.r, null, m['thigh' + S]),
+      cap('shin' + S, 'leg' + S, j['knee' + S], j['ankle' + S], B.shin.r, null, m['shin' + S]),
+      cap('foot' + S, 'leg' + S, j['heel' + S], j['toe' + S], B.foot.r, null, m['foot' + S]),
+    ];
+  }
+  function armFK(sk, S, ang) {
+    const s = sgn(S), a = ang.sh || [0, 0, 0];
+    const Ua = mm(sk.m.U, mm(rz(a[0]), mm(rx(-s * (a[1] || 0)), ry(-s * (a[2] || 0)))));
+    const sh = sk.j['sh' + S];
+    const elbow = add(sh, mv(Ua, [0, -B.upperArm.len, 0]));
+    const Fa = mm(Ua, rz(ang.elbow || 0));
+    const wrist = add(elbow, mv(Fa, [0, -B.forearm.len, 0]));
+    const Ha = mm(Fa, rz(ang.wrist || 0));
+    return { Ua, Fa, Ha, elbow, wrist };
+  }
+  function storeArm(sk, S, r) {
+    sk.m['uarm' + S] = r.Ua; sk.m['farm' + S] = r.Fa; sk.m['hand' + S] = r.Ha;
+    sk.j['elbow' + S] = r.elbow; sk.j['wrist' + S] = r.wrist;
+    sk.j['tip' + S] = add(r.wrist, mv(r.Ha, [0, -B.hand.len, 0]));
+  }
+  function armSegs(sk, S) {
+    const j = sk.j, m = sk.m;
+    return [
+      cap('uarm' + S, 'arm' + S, j['sh' + S], j['elbow' + S], B.upperArm.r, null, m['uarm' + S]),
+      cap('farm' + S, 'arm' + S, j['elbow' + S], j['wrist' + S], B.forearm.r, null, m['farm' + S]),
+      cap('hand' + S, 'arm' + S, j['wrist' + S], j['tip' + S], B.hand.r, null, m['hand' + S]),
+    ];
+  }
+  function ikLeg(sk, S, c) {
+    const A = sk.j['hip' + S];
+    const T = val(c.target, sk);
+    const r = ik2(A, T, B.thigh.len, B.shin.len, nrm(val(c.pole, sk)));
+    if (r.miss > 0.05) sk.misses.push({ limb: 'leg' + S, miss: r.miss });
+    const [Th, Sh] = chainFrames(A, r.J, r.E, r.p, 1);
+    const rel = mm(Sh, rz(c.ankle || 0));
+    let Ft = rel;
+    const f = val(c.foot, sk);
+    if (f) {
+      const w = c.footW === undefined ? 1 : c.footW;
+      Ft = w >= 0.999 ? frame(f.fwd, f.up) : frame(nrm(mix(col(rel, 0), f.fwd, w)), nrm(mix(col(rel, 1), f.up, w)));
+    }
+    // hinge axis of the knee should stay roughly aligned with the pelvis' left-right axis
+    sk.twist.push({ limb: 'leg' + S, dot: dot(col(Th, 2), col(sk.m.P, 2)) });
+    storeLeg(sk, S, { Th, Sh, Ft, knee: r.J, ankle: r.E });
+  }
+  function ikArm(sk, S, c) {
+    const A = sk.j['sh' + S];
+    const T = val(c.target, sk);
+    const r = ik2(A, T, B.upperArm.len, B.forearm.len, nrm(val(c.pole, sk)));
+    if (r.miss > 0.05) sk.misses.push({ limb: 'arm' + S, miss: r.miss });
+    const [Ua, Fa] = chainFrames(A, r.J, r.E, r.p, -1);
+    let Ha = mm(Fa, rz(c.wrist || 0));
+    const hd = c.hand && val(c.hand.dir, sk);
+    if (hd) {
+      const Y = scl(nrm(hd), -1);
+      let Z = sub(col(Fa, 2), scl(Y, dot(col(Fa, 2), Y)));
+      Z = len(Z) < 1e-6 ? perpAny(Y) : nrm(Z);
+      Ha = cols(crs(Y, Z), Y, Z);
+    }
+    storeArm(sk, S, { Ua, Fa, Ha, elbow: r.J, wrist: r.E });
+  }
+
+  // lowest world-y point of a drawable
+  function bottom(s) {
+    if (s.kind === 'ell') {
+      let e = 0;
+      for (let i = 0; i < 3; i++) e += (s.ax[i] * s.M[3 + i]) ** 2;
+      return s.c[1] - Math.sqrt(e);
+    }
+    if (!s.w) return Math.min(s.a[1] - s.r[0], s.b[1] - s.r[1]);
+    const Xy = s.M[3], Yy = s.M[4], Zy = s.M[5];
+    const ext = (r, w) => Math.sqrt((r * Xy) ** 2 + (w * Zy) ** 2 + (Math.min(r, w) * Yy) ** 2);
+    return Math.min(s.a[1] - ext(s.r[0], s.w[0]), s.b[1] - ext(s.r[1], s.w[1]));
+  }
+
+  // ---------- shared poses ----------
+  const SUP = { front: [0, 1, 0], head: [-1, 0, 0] }; // lying on back, head to the left, right side to camera
+  const PRONE = { front: [0, -1, 0], head: [1, 0, 0] }; // face down, head to the right
+  const FOOT_FLAT = { fwd: [1, 0, 0], up: [0, 1, 0] };
+  const TOE_ANG = 17.6; // top of foot on the floor when kneeling
+  const FOOT_TOP = { fwd: [-cosd(TOE_ANG), -sind(TOE_ANG), 0], up: [sind(TOE_ANG), -cosd(TOE_ANG), 0] };
+  const KNEE_Y = 6.6; // knee centre height when kneeling
+  const kneelAnkle = s => [-Math.sqrt(47 * 47 - (KNEE_Y - 4.1) ** 2), 4.1, s * B.hipZ];
+  const HOOK_X = 60;
+  const plantedAnkle = (s, x) => [x === undefined ? HOOK_X : x, ANKLE_H, s * B.hipZ];
+  const plantedLeg = (S, x) => ({ ik: { target: plantedAnkle(sgn(S), x), pole: [0.25, 1, 0], foot: FOOT_FLAT } });
+  const restArmIK = S => { const s = sgn(S); return { target: [0, 3.4, s * 27], pole: [0, -0.2, s], hand: { dir: [1, -0.04, 0.06 * s] } }; };
+  const restArm = S => ({ ik: restArmIK(S) });
+  let SUP_NECK = 0; // neck angle that rests the back of the head on the floor (solved below)
+  function supine(o) {
+    const sp = Object.assign({ lumbar: 0, thorax: 0, upper: 0, neck: SUP_NECK, head: 0 }, (o && o.spine) || {});
+    return Object.assign({
+      front: SUP.front, head: SUP.head, tilt: 0, settle: 'trunk',
+      anchor: { joint: 'hip', at: [0, null, 0] },
+      legs: { R: plantedLeg('R'), L: plantedLeg('L') },
+      arms: { R: restArm('R'), L: restArm('L') },
+    }, o || {}, { spine: sp });
+  }
+  const nlerp = (a, b, t) => nrm(mix(a, b, t));
+  // grip point behind thigh X for hand H
+  function thighGrip(sk, X, H, t) {
+    const M = sk.m['thigh' + X];
+    const c = mix(sk.j['hip' + X], sk.j['knee' + X], t === undefined ? 0.74 : t);
+    const Xl = col(M, 0), Zl = col(M, 2), side = sgn(H) === sgn(X) ? 1 : -1;
+    const lat = sgn(X) * side; // +Z for the hand on the right-hand side of that thigh
+    // fingers wrap the back of the thigh; the wrist sits a hand-length short of the fingertips
+    const tips = add(c, add(scl(Xl, -7), scl(Zl, lat * 3)));
+    const side0 = add(c, scl(Zl, lat * 9));
+    const toSh = nrm(sub(sk.j['sh' + H], side0));
+    const wrist = add(side0, scl(toSh, 4));
+    return { wrist, dir: nrm(sub(tips, wrist)) };
+  }
+  function gripArm(H, X, g, t) {
+    const s = sgn(H), rest = restArmIK(H);
+    return {
+      ik: {
+        target: sk => mix(rest.target, thighGrip(sk, X, H, t).wrist, g),
+        pole: nlerp(rest.pole, [0.3, -0.5, s], g),
+        hand: { dir: sk => nlerp(rest.hand.dir, thighGrip(sk, X, H, t).dir, g) },
+      },
+    };
+  }
+  const hl = (part, a, b, r, alpha) => ({ part, a, b, r, alpha });
+  const at = (sk, M, p0, local) => add(p0, mv(M, local));
+
+  // ---------- exercises ----------
+  const EX = {};
+
+  EX.kneeToChest = {
+    cam: { yaw: 0 },
+    defaults: { kR: 0, kL: 0 },
+    keys: { rest: {}, R: { kR: 1 }, L: { kL: 1 } },
+    steps: [
+      ['rest', 1.2, 'Knees bent, feet flat'],
+      ['R', 2.6, 'Draw right knee in'],
+      ['R', 3, 'Hold'],
+      ['rest', 2.6, 'Lower slowly'],
+      ['rest', 0.8, 'Switch sides'],
+      ['L', 2.6, 'Draw left knee in'],
+      ['L', 3, 'Hold'],
+      ['rest', 2.6, 'Lower slowly'],
+    ],
+    keyStep: 2,
+    build(p) {
+      const spec = supine();
+      for (const X of ['R', 'L']) {
+        const k = p['k' + X];
+        if (k > 0.001) spec.legs[X] = {
+          ik: {
+            target: sk => mix(plantedAnkle(sgn(X)), sk.legFK(X, { hip: [124, 0, 0], knee: 120 }).ankle, k),
+            pole: [0.25 - 0.55 * k, 1, 0], foot: FOOT_FLAT, footW: 1 - k, ankle: -8,
+          },
+        };
+      }
+      const g = Math.max(p.kR, p.kL);
+      if (g > 0.001) {
+        const X = p.kR >= p.kL ? 'R' : 'L';
+        spec.arms = { R: gripArm('R', X, g), L: gripArm('L', X, g) };
+      }
+      return spec;
+    },
+    contacts(sk, p) {
+      const c = { neck: sk.j.upE };
+      if (p.kR < 0.001) { c.heelR = sk.j.heelR; c.toeR = sk.j.toeR; }
+      if (p.kL < 0.001) { c.heelL = sk.j.heelL; c.toeL = sk.j.toeL; }
+      return c;
+    },
+  };
+
+  EX.figureFour = {
+    cam: { yaw: -40, pitch: 35 },
+    tones: { legL: 'alt' },
+    // the crossed leg sits in deep hip external rotation + abduction, so its knee axis turns well away from the pelvis axis
+    twistMin: -0.35,
+    defaults: { cross: 0, lift: 0, open: 0 },
+    keys: { rest: {}, crossed: { cross: 1 }, drawn: { cross: 1, lift: 1, open: 1 } },
+    steps: [
+      ['rest', 1, 'Knees bent, feet flat'],
+      ['crossed', 2.4, 'Cross right ankle over left knee'],
+      ['crossed', 0.8, 'Flex right foot'],
+      ['drawn', 2.8, 'Lift left foot, pull thigh in'],
+      ['drawn', 3, 'Hold, right knee opens'],
+      ['crossed', 2.6, 'Lower left foot'],
+      ['rest', 2.2, 'Uncross'],
+    ],
+    keyStep: 4,
+    build(p) {
+      const spec = supine();
+      spec.order = ['L', 'R'];
+      if (p.lift > 0.001) spec.legs.L = {
+        ik: {
+          target: sk => mix(plantedAnkle(-1), sk.legFK('L', { hip: [98, 0, 0], knee: 90 }).ankle, p.lift),
+          pole: [0.25 - 0.3 * p.lift, 1, 0], foot: FOOT_FLAT, footW: 1 - p.lift, ankle: 0,
+        },
+      };
+      if (p.cross > 0.001) spec.legs.R = {
+        ik: {
+          target: sk => {
+            const M = sk.m.thighL;
+            const c = mix(sk.j.hipL, sk.j.kneeL, 0.86);
+            const onThigh = add(c, add(scl(col(M, 0), 10.2), scl(col(M, 2), 3)));
+            const base = mix(plantedAnkle(1), onThigh, p.cross);
+            return add(base, scl([-4, 18, 0], Math.sin(Math.PI * p.cross)));
+          },
+          pole: nlerp(nlerp([0.25, 1, 0], [0.35, 0.6, 1], p.cross), [0, 0.25, 1], p.open),
+          foot: FOOT_FLAT, footW: 1 - p.cross, ankle: 12,
+        },
+      };
+      if (p.lift > 0.001) {
+        spec.arms = { R: gripArm('R', 'L', p.lift, 0.5), L: gripArm('L', 'L', p.lift, 0.5) };
+        spec.shOffR = spec.shOffL = [4 * p.lift, 1.5 * p.lift, 0]; // shoulder blades protract as the hands reach
+      }
+      spec.hl = [hl('torso', sk => at(sk, sk.m.P, sk.j.hip, [-10, 1, 11]), sk => at(sk, sk.m.P, sk.j.hip, [-9, 9, 9]), 7, 0.5 * p.open)];
+      return spec;
+    },
+    contacts(sk, p) {
+      const c = { neck: sk.j.upE };
+      if (p.cross < 0.001) { c.heelR = sk.j.heelR; c.toeR = sk.j.toeR; }
+      if (p.lift < 0.001) { c.heelL = sk.j.heelL; c.toeL = sk.j.toeL; }
+      return c;
+    },
+  };
+
+  EX.childsPose = {
+    cam: { yaw: 0 },
+    defaults: { sit: 0, breath: 0 },
+    keys: { quad: {}, child: { sit: 1 } },
+    steps: [
+      ['quad', 1.4, 'Hands and knees'],
+      ['child', 3.2, 'Sit hips back to heels'],
+      ['child', 6.4, 'Hold and breathe', { breath: 3.2 }],
+      ['quad', 2.8, 'Return slowly'],
+    ],
+    keyStep: 2,
+    build(p, C) {
+      const th = 57 * p.sit;
+      const hip = [-B.thigh.len * sind(th), KNEE_Y + B.thigh.len * cosd(th), 0];
+      return {
+        front: PRONE.front, head: PRONE.head,
+        rotZ: lerp(C.alphaQ, C.alphaC, p.sit),
+        spine: { lumbar: 14 * p.sit, thorax: 12 * p.sit, upper: 6 * p.sit, neck: 4 + 8 * p.sit },
+        breath: p.breath,
+        anchor: { joint: 'hip', at: hip },
+        legs: {
+          R: { ik: { target: kneelAnkle(1), pole: [1, -0.4 + 0.4 * p.sit, 0], foot: FOOT_TOP } },
+          L: { ik: { target: kneelAnkle(-1), pole: [1, -0.4 + 0.4 * p.sit, 0], foot: FOOT_TOP } },
+        },
+        arms: { R: childArm('R', p.sit), L: childArm('L', p.sit) },
+      };
+    },
+    setup(C) {
+      C.alphaC = 0;
+      C.alphaQ = bisect(a => { C.alphaQ = a; return this.solveP({ sit: 0 }, C).j.shR[1] - (3.4 + 63.2); }, -20, 40);
+      C.alphaC = bisect(a => { C.alphaC = a; return headBottom(this.solveP({ sit: 1 }, C)) - 0.8; }, -50, 20);
+    },
+    contacts(sk) { return { kneeR: sk.j.kneeR, kneeL: sk.j.kneeL, ankleR: sk.j.ankleR, ankleL: sk.j.ankleL, toeR: sk.j.toeR }; },
+  };
+  function childArm(S, sit) {
+    return {
+      ik: {
+        target: sk => {
+          const sh = sk.j['sh' + S];
+          const dy = sh[1] - 3.4;
+          return [sh[0] + Math.sqrt(Math.max(0, 63.3 * 63.3 - dy * dy)), 3.4, sh[2]];
+        },
+        pole: nlerp([-1, 0, 0], [0, 1, 0], sit),
+        hand: { dir: [1, -0.05, 0] },
+      },
+    };
+  }
+
+  EX.hipFlexor = {
+    cam: { yaw: 0 },
+    defaults: { s: 0, p: 0, g: 0 },
+    keys: { base: {}, tuck: { p: 1 }, squeeze: { p: 1, g: 1 }, fwd: { s: 1, p: 1, g: 1 } },
+    steps: [
+      ['base', 1.4, 'Half kneel, torso tall'],
+      ['tuck', 1.6, 'Tuck pelvis under'],
+      ['squeeze', 1.2, 'Squeeze back glute'],
+      ['fwd', 2.6, 'Shift hips forward'],
+      ['fwd', 3, 'Hold, torso upright'],
+      ['base', 2.6, 'Ease back'],
+    ],
+    keyStep: 4,
+    build(p) {
+      const sh = 9 * p.s;
+      const hy = KNEE_Y + Math.sqrt(B.thigh.len ** 2 - sh * sh);
+      const tilt = 9 * p.p;
+      const P = sk => sk.m.P;
+      return {
+        front: [1, 0, 0], head: [0, 1, 0], tilt,
+        spine: { lumbar: tilt, thorax: 0, upper: 0, neck: 0 },
+        anchor: { joint: 'hip', at: [sh, hy, 0] },
+        legs: {
+          R: { ik: { target: kneelAnkle(1), pole: [1, -1, 0], foot: FOOT_TOP } },
+          L: { ik: { target: [48, ANKLE_H, -B.hipZ], pole: [1, 0.35, 0], foot: FOOT_FLAT } },
+        },
+        arms: { R: hipHand('R'), L: hipHand('L') },
+        hl: [
+          hl('legR', sk => at(sk, P(sk), sk.j.hip, [7, 9, 9]), sk => add(mix(sk.j.hipR, sk.j.kneeR, 0.5), scl(col(sk.m.thighR, 0), 4.5)), 4.5, 0.55 * p.s),
+          hl('torso', sk => at(sk, P(sk), sk.j.hip, [-11, 0, 9]), sk => at(sk, P(sk), sk.j.hip, [-10, 8, 9]), 6.5, 0.5 * p.g),
+        ],
+      };
+    },
+    contacts(sk) { return { kneeR: sk.j.kneeR, ankleR: sk.j.ankleR, heelL: sk.j.heelL, toeL: sk.j.toeL }; },
+  };
+  function hipHand(S) {
+    const s = sgn(S);
+    return {
+      ik: {
+        target: sk => at(sk, sk.m.P, sk.j.hip, [1, 15, s * 19]),
+        pole: sk => mv(sk.m.P, [-1, 0.1, s * 0.8]),
+        hand: { dir: sk => mv(sk.m.P, [0.85, -0.5, 0]) },
+      },
+    };
+  }
+
+  EX.quadStretch = {
+    cam: { yaw: 0 },
+    defaults: { k: 0, grip: 0, pull: 0 },
+    keys: { rest: {}, bent: { k: 1 }, grab: { k: 1, grip: 1 }, pull: { k: 1, grip: 1, pull: 1 } },
+    steps: [
+      ['rest', 1.2, 'Lie face down'],
+      ['bent', 2.4, 'Bend right knee'],
+      ['grab', 1.6, 'Reach back, hold ankle'],
+      ['pull', 2, 'Draw heel to glute'],
+      ['pull', 3, 'Hold, hips stay down'],
+      ['grab', 1.4, 'Ease off'],
+      ['bent', 1.2, 'Let go'],
+      ['rest', 2.2, 'Lower leg slowly'],
+    ],
+    keyStep: 4,
+    build(p, C) {
+      const k = 142 * p.k + 10 * p.pull;
+      return {
+        front: PRONE.front, head: PRONE.head,
+        spine: { lumbar: 0, thorax: 0, upper: 0, neck: C.neck, head: 0 },
+        shOffR: scl([-3, -6, 0], p.grip),
+        anchor: { joint: 'hip', at: [0, null, 0] }, settle: 'torso',
+        legs: { R: { hip: [C.hipF, 0, 0], knee: k, ankle: lerp(-72, -35, p.k) }, L: { hip: [C.hipF, 0, 0], knee: 0, ankle: -72 } },
+        arms: {
+          R: {
+            ik: {
+              target: sk => mix([-2, 3.4, 27], quadGrip(sk).wrist, p.grip),
+              pole: nlerp([0, -0.2, 1], [0, 1, 0.7], p.grip),
+              hand: { dir: sk => nlerp([-1, -0.03, 0], quadGrip(sk).dir, p.grip) },
+            },
+          },
+          L: { ik: { target: sk => C.pillow(sk), pole: sk => poleForY(sk.j.shL, C.pillow(sk), 36, 28, 4.5, [0.3, 0, -1]), hand: { dir: [0.15, -0.02, 1] } } },
+        },
+        hl: [hl('legR', sk => mix(sk.j.hipR, sk.j.kneeR, 0.15), sk => mix(sk.j.hipR, sk.j.kneeR, 0.8), 4.5, 0.5 * p.pull)],
+      };
+    },
+    setup(C) {
+      // left forearm lies across the floor under the forehead
+      C.pillow = sk => [sk.j.upE[0] + 22, 3.6, 4];
+      C.neck = 0; C.hipF = 0;
+      C.hipF = bisect(h => { C.hipF = h; return partBottom(this.solveP({ k: 0 }, C), 'legL'); }, -10, 20);
+      C.neck = bisect(n => { C.neck = n; const sk = this.solveP({ k: 0 }, C); return headBottom(sk) - forearmTop(sk, 'L'); }, -50, 20);
+    },
+    contacts(sk) { return { hipR: sk.j.hipR, hipL: sk.j.hipL, toeL: sk.j.toeL, wristL: sk.j.wristL }; },
+  };
+  function quadGrip(sk) {
+    const ank = sk.j.ankleR, sh = sk.j.shR;
+    const w = add(add(ank, scl(nrm(sub(sh, ank)), 8)), [0, 0, 4.5]);
+    return { wrist: w, dir: nrm(add(sub(ank, w), [0, 0, -2])) };
+  }
+  function forearmTop(sk, S) { return Math.max(sk.j['elbow' + S][1] + B.forearm.r[0], sk.j['wrist' + S][1] + B.forearm.r[1]); }
+  function headBottom(sk) { return bottom(sk.segs.find(s => s.name === 'head')); }
+
+  EX.pelvicTilt = {
+    cam: { yaw: 0 },
+    defaults: { t: 0 },
+    keys: { arch: {}, flat: { t: 1 } },
+    steps: [
+      ['arch', 1.4, 'Relax: small gap under low back'],
+      ['flat', 2.2, 'Tilt pelvis back'],
+      ['flat', 2.6, 'Hold, low back flat'],
+      ['arch', 2.2, 'Release slowly'],
+    ],
+    keyStep: 2,
+    gap: true,
+    build(p, C) {
+      const t = p.t;
+      const tilt = lerp(-16, 4, t), lumbar = lerp(-12, 3, t);
+      const thorax = lerp(C.th0, C.th1, t);
+      return supine({
+        tilt,
+        // thorax angle keeps the ribcage resting on the floor; upper back lies flat
+        spine: { lumbar, thorax, upper: tilt - lumbar - thorax },
+        anchor: { joint: 'upE', at: [-63, null, 0] },
+        arms: { R: pelvisHand('R'), L: pelvisHand('L') },
+        flat: t,
+      });
+    },
+    setup(C) {
+      C.th0 = C.th1 = 0;
+      const seg = (sk, n) => bottom(sk.segs.find(s => s.name === n));
+      C.th0 = bisect(a => { C.th0 = a; const sk = this.solveP({ t: 0 }, C); return seg(sk, 'thorax') - seg(sk, 'pelvis'); }, -25, 25);
+      // flat back: low back and ribcage both on the floor
+      C.th1 = bisect(a => { C.th1 = a; const sk = this.solveP({ t: 1 }, C); return seg(sk, 'lumbar') - seg(sk, 'thorax'); }, -12, 12);
+    },
+    contacts(sk) { return { heelR: sk.j.heelR, toeR: sk.j.toeR, heelL: sk.j.heelL, toeL: sk.j.toeL, neckX: [sk.j.upE[0], 0, 0] }; },
+  };
+
+  function pelvisHand(S) {
+    const s = sgn(S);
+    return {
+      ik: {
+        target: sk => at(sk, sk.m.P, sk.j.hip, [13.5, 9, s * 13]),
+        pole: [0, -0.4, s],
+        hand: { dir: sk => mv(sk.m.P, [0.15, -1, -s * 0.35]) },
+      },
+    };
+  }
+
+  EX.deadBug = {
+    cam: { yaw: 0 },
+    defaults: { aR: 0, aL: 0, lR: 0, lL: 0 },
+    keys: { start: {}, A: { aR: 1, lL: 1 }, B: { aL: 1, lR: 1 } },
+    steps: [
+      ['start', 1.2, 'Arms up, knees over hips'],
+      ['A', 3, 'Lower right arm, left leg'],
+      ['A', 1.2, 'Hover, back flat'],
+      ['start', 2.6, 'Return'],
+      ['start', 0.6, 'Switch'],
+      ['B', 3, 'Lower left arm, right leg'],
+      ['B', 1.2, 'Hover, back flat'],
+      ['start', 2.6, 'Return'],
+    ],
+    keyStep: 2,
+    build(p, C) {
+      const arm = a => ({ sh: [lerp(90, C.armF, a), 0, 0], elbow: 0, wrist: 0 });
+      const leg = l => ({ hip: [lerp(90, C.legH, l), 0, 0], knee: lerp(90, 3, l), ankle: -14 * l });
+      return supine({
+        tilt: 4, spine: { lumbar: 3, thorax: 1 },
+        legs: { R: leg(p.lR), L: leg(p.lL) }, arms: { R: arm(p.aR), L: arm(p.aL) },
+        flat: 1,
+      });
+    },
+    setup(C) {
+      C.armF = 90; C.legH = 90;
+      C.armF = bisect(f => { C.armF = f; return partBottom(this.solveP({ aR: 1 }, C), 'armR') - 3; }, 200, 120);
+      C.legH = bisect(h => { C.legH = h; return partBottom(this.solveP({ lL: 1 }, C), 'legL') - 3.5; }, -10, 60);
+    },
+    contacts(sk) { return { neck: sk.j.upE, hip: sk.j.hip }; },
+  };
+  function partBottom(sk, part) { let m = Infinity; for (const s of sk.segs) if (s.part === part) m = Math.min(m, bottom(s)); return m; }
+
+  EX.gluteBridge = {
+    cam: { yaw: 0 },
+    defaults: { b: 0, g: 0 },
+    keys: { down: {}, up: { b: 1 }, squeeze: { b: 1, g: 1 } },
+    steps: [
+      ['down', 1.2, 'Feet flat, hip-width'],
+      ['up', 2.6, 'Lift hips'],
+      ['squeeze', 0.6, 'Squeeze glutes'],
+      ['squeeze', 2.2, 'Hold'],
+      ['down', 3, 'Lower slowly'],
+    ],
+    keyStep: 3,
+    build(p, C) {
+      const b = C.beta * p.b;
+      const P = sk => sk.m.P;
+      return supine({
+        rotZ: b, spine: { lumbar: 0, thorax: 0, upper: b },
+        anchor: { joint: 'thoE', at: C.pivot },
+        hl: [hl('torso', sk => at(sk, P(sk), sk.j.hip, [-11, -1, 9]), sk => at(sk, P(sk), sk.j.hip, [-11, 8, 9]), 7, 0.5 * p.g)],
+      });
+    },
+    setup(C) {
+      C.beta = 0; C.pivot = [0, null, 0];
+      const flat = solve(supine());
+      C.pivot = flat.j.thoE.slice();
+      C.beta = bisect(b => {
+        C.beta = b;
+        const sk = this.solveP({ b: 1 }, C);
+        const S = sk.j.shR, H = sk.j.hipR, K = sk.j.kneeR;
+        const u = sub(H, S), v = sub(K, H);
+        return u[0] * v[1] - u[1] * v[0];
+      }, 5, 45);
+    },
+    contacts(sk) { return { heelR: sk.j.heelR, toeR: sk.j.toeR, heelL: sk.j.heelL, toeL: sk.j.toeL, shR: sk.j.shR, shL: sk.j.shL, wristR: sk.j.wristR, wristL: sk.j.wristL }; },
+  };
+
+  EX.clamshell = {
+    cam: { yaw: 0, pitch: 35 },
+    order: ['armL', 'torso', 'legL', 'legR', 'armR'],
+    defaults: { o: 0 },
+    keys: { closed: {}, open: { o: 1 } },
+    steps: [
+      ['closed', 1, 'Knees and feet stacked'],
+      ['open', 1.8, 'Open top knee'],
+      ['open', 2, 'Hold, pelvis still'],
+      ['closed', 2.4, 'Close slowly'],
+    ],
+    keyStep: 2,
+    build(p, C) {
+      return {
+        front: [0, 0, 1], head: [1, 0, 0],
+        spine: { neck: 0, neckLat: C.neckLat },
+        anchor: { joint: 'hip', at: [0, null, 0] },
+        order: ['L', 'R'],
+        legs: {
+          L: { hip: [45, 0, 0], knee: C.knee, ankle: 0 },
+          R: {
+            ik: {
+              target: sk => add(sk.j.ankleL, [0, 8.6, 0]),
+              pole: sk => {
+                const A = sk.j.hipR, T = add(sk.j.ankleL, [0, 8.6, 0]);
+                const u = nrm(sub(T, A));
+                const p0 = sub(add(sk.j.kneeL, [0, 13, 0]), A);
+                return rotAxis(p0, u, C.openSign * C.open * p.o);
+              },
+              foot: sk => ({ fwd: col(sk.m.footL, 0), up: col(sk.m.footL, 1) }),
+            },
+          },
+        },
+        arms: {
+          L: { sh: [172, 0, 0], elbow: 8, wrist: 0 },
+          R: {
+            ik: {
+              target: sk => at(sk, sk.m.P, sk.j.hip, [2, 5, 22]),
+              pole: sk => mv(sk.m.P, [-1, 0.05, 0.25]),
+              hand: { dir: sk => mv(sk.m.P, [0.5, -0.85, 0]) },
+            },
+          },
+        },
+      };
+    },
+    setup(C) {
+      C.knee = 50; C.open = 46; C.openSign = 1; C.neckLat = 0;
+      const k0 = this.solveP({ o: 0 }, C).j.kneeR[1];
+      if (this.solveP({ o: 1 }, C).j.kneeR[1] < k0) C.openSign = -1;
+      C.neckLat = bisect(n => { C.neckLat = n; const sk = this.solveP({ o: 0 }, C); return headBottom(sk) - armTop(sk, 'L'); }, 0, -40);
+    },
+    contacts(sk) { return { ankleR: sk.j.ankleR, ankleL: sk.j.ankleL, hip: sk.j.hip, hipR: sk.j.hipR }; },
+  };
+  function armTop(sk, S) {
+    return Math.max(sk.j['sh' + S][1] + B.upperArm.r[0], sk.j['elbow' + S][1] + B.upperArm.r[1]);
+  }
+
+  function bisect(f, lo, hi) {
+    let flo = f(lo);
+    for (let i = 0; i < 50; i++) {
+      const mid = (lo + hi) / 2, fm = f(mid);
+      if ((fm < 0) === (flo < 0)) { lo = mid; flo = fm; } else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+
+  // ---------- timeline ----------
+  const easeIO = u => 0.5 - 0.5 * Math.cos(Math.PI * clamp(u, 0, 1));
+  for (const id in EX) {
+    const ex = EX[id];
+    ex.id = id;
+    ex.C = {};
+    ex.params = key => Object.assign({}, ex.defaults, ex.keys[key]);
+    ex.solveP = (p, C) => solve(ex.build(Object.assign({}, ex.defaults, p), C || ex.C));
+    ex.steps = ex.steps.map(([key, dur, label, opt]) => ({ key, dur, label, opt: opt || {} }));
+    let acc = 0;
+    for (const s of ex.steps) { s.t0 = acc; acc += s.dur; }
+    ex.total = acc;
+    ex.keyTime = ex.steps[ex.keyStep].t0 + ex.steps[ex.keyStep].dur * 0.5;
+    ex.sample = t => {
+      t = ((t % ex.total) + ex.total) % ex.total;
+      const n = ex.steps.length;
+      let i = 0;
+      while (i < n - 1 && t >= ex.steps[i + 1].t0) i++;
+      const s = ex.steps[i], prev = ex.steps[(i - 1 + n) % n];
+      const a = ex.params(prev.key), b = ex.params(s.key), e = easeIO((t - s.t0) / s.dur);
+      const p = {};
+      for (const k in a) p[k] = lerp(a[k], b[k], e);
+      let label = s.label;
+      if (s.opt.breath) {
+        const ph = ((t - s.t0) / s.opt.breath) % 1;
+        p.breath = 0.5 - 0.5 * Math.cos(2 * Math.PI * ph);
+        label = ph < 0.5 ? 'Hold, breathe in' : 'Hold, breathe out';
+      }
+      return { p, label, i };
+    };
+    ex.pose = t => { const { p, label, i } = ex.sample(t); const sk = ex.solveP(p); sk.label = label; sk.step = i; sk.p = p; return sk; };
+  }
+  SUP_NECK = bisect(n => { SUP_NECK = n; return headBottom(solve(supine())) - 0.2; }, -40, 30);
+  for (const id in EX) if (EX[id].setup) EX[id].setup(EX[id].C);
+
+  // ---------- validation ----------
+  function validate(id, n) {
+    const ex = EX[id];
+    n = n || 240;
+    const issues = [];
+    const first = {};
+    let minFloor = Infinity, maxDrift = 0, maxMiss = 0, minTwist = 1;
+    for (let i = 0; i < n; i++) {
+      const t = (i / n) * ex.total;
+      const sk = ex.pose(t);
+      for (const s of sk.segs) {
+        const b = bottom(s);
+        if (b < minFloor) minFloor = b;
+        if (b < -0.5) issues.push(`t=${t.toFixed(2)} ${s.name} below floor by ${(-b).toFixed(2)}`);
+      }
+      for (const m of sk.misses) { maxMiss = Math.max(maxMiss, m.miss); issues.push(`t=${t.toFixed(2)} ${m.limb} IK target out of reach by ${m.miss.toFixed(2)}`); }
+      for (const tw of sk.twist) { minTwist = Math.min(minTwist, tw.dot); if (tw.dot < (ex.twistMin === undefined ? 0.2 : ex.twistMin)) issues.push(`t=${t.toFixed(2)} ${tw.limb} knee axis twisted (dot ${tw.dot.toFixed(2)})`); }
+      // bone lengths
+      const L = (a, b) => len(sub(sk.j[a], sk.j[b]));
+      for (const S of ['R', 'L']) {
+        if (Math.abs(L('hip' + S, 'knee' + S) - 48) > 0.01 || Math.abs(L('knee' + S, 'ankle' + S) - 47) > 0.01) issues.push(`t=${t.toFixed(2)} leg${S} length changed`);
+        if (Math.abs(L('sh' + S, 'elbow' + S) - 36) > 0.01 || Math.abs(L('elbow' + S, 'wrist' + S) - 28) > 0.01) issues.push(`t=${t.toFixed(2)} arm${S} length changed`);
+      }
+      if (ex.contacts) {
+        const c = ex.contacts(sk, sk.p);
+        for (const k in c) {
+          if (!first[k]) first[k] = c[k];
+          const d = len(sub(c[k], first[k]));
+          maxDrift = Math.max(maxDrift, d);
+          if (d > 0.5) issues.push(`t=${t.toFixed(2)} contact ${k} drifted ${d.toFixed(2)}`);
+        }
+      }
+    }
+    return { id, minFloor, maxDrift, maxMiss, minTwist, issues };
+  }
+
+  G.FigureKit = { EX, B, solve, bottom, validate, mv, mm, rx, ry, col, add, sub, scl, len, nrm, dot };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+/* Demo renderer: SVG drawing, play/pause, reduced motion */
+(function () {
+  'use strict';
+  const K = window.FigureKit;
+  const NS = 'http://www.w3.org/2000/svg';
+  const PAD_TOP = 10, PAD_FLOOR = 10, PAD_X = 10, MIN_H = 96, OUTLINE = 1.5;
+  let VB_W = 0;
+  const COLORS = {
+    torso: { fill: '#D7E5F0', line: '#3D6B8E' },
+    near: { fill: '#E4EEF6', line: '#3D6B8E' },
+    far: { fill: '#EEF3F7', line: '#9DB4C8' },
+    alt: { fill: '#C9DAE8', line: '#3D6B8E' },
+  };
+  const f1 = n => (Math.round(n * 10) / 10).toString();
+
+  // ---- 2D shape paths (all wound the same way so overlapping shapes union under nonzero fill) ----
+  function circlePath(c, r) {
+    return `M${f1(c[0] + r)} ${f1(c[1])}A${f1(r)} ${f1(r)} 0 1 0 ${f1(c[0] - r)} ${f1(c[1])}A${f1(r)} ${f1(r)} 0 1 0 ${f1(c[0] + r)} ${f1(c[1])}Z`;
+  }
+  function capPath(c0, r0, c1, r1) {
+    const dx = c1[0] - c0[0], dy = c1[1] - c0[1], d = Math.hypot(dx, dy);
+    if (d < 0.01 || d <= Math.abs(r0 - r1) + 0.01) return r0 >= r1 ? circlePath(c0, r0) : circlePath(c1, r1);
+    const ux = dx / d, uy = dy / d, px = -uy, py = ux;
+    const ca = (r0 - r1) / d, sa = Math.sqrt(Math.max(0, 1 - ca * ca));
+    const n1 = [ux * ca + px * sa, uy * ca + py * sa], n2 = [ux * ca - px * sa, uy * ca - py * sa];
+    const big1 = ca < 0 ? 1 : 0, big0 = ca > 0 ? 1 : 0;
+    return `M${f1(c0[0] + n1[0] * r0)} ${f1(c0[1] + n1[1] * r0)}` +
+      `L${f1(c1[0] + n1[0] * r1)} ${f1(c1[1] + n1[1] * r1)}` +
+      `A${f1(r1)} ${f1(r1)} 0 ${big1} 0 ${f1(c1[0] + n2[0] * r1)} ${f1(c1[1] + n2[1] * r1)}` +
+      `L${f1(c0[0] + n2[0] * r0)} ${f1(c0[1] + n2[1] * r0)}` +
+      `A${f1(r0)} ${f1(r0)} 0 ${big0} 0 ${f1(c0[0] + n1[0] * r0)} ${f1(c0[1] + n1[1] * r0)}Z`;
+  }
+  function ellPath(c, A, Bm, ang) {
+    const ca = Math.cos(ang), sa = Math.sin(ang);
+    const p = [c[0] + A * ca, c[1] + A * sa], q = [c[0] - A * ca, c[1] - A * sa];
+    const deg = f1(ang * 180 / Math.PI);
+    return `M${f1(p[0])} ${f1(p[1])}A${f1(A)} ${f1(Bm)} ${deg} 1 0 ${f1(q[0])} ${f1(q[1])}A${f1(A)} ${f1(Bm)} ${deg} 1 0 ${f1(p[0])} ${f1(p[1])}Z`;
+  }
+
+  // ---- projection: orthographic camera (yaw about the vertical axis, optional downward pitch) ----
+  const tr3 = m => [m[0], m[3], m[6], m[1], m[4], m[7], m[2], m[5], m[8]];
+  function projector(cam, ox, fy) {
+    const Rc = K.mm(K.rx(cam.pitch || 0), K.ry(cam.yaw || 0)), Ri = tr3(Rc);
+    const P = p => { const q = K.mv(Rc, p); return [ox + q[0], fy - q[1], q[2]]; };
+    return { P, Rc, Ri };
+  }
+  function shapes(sk, pr) {
+    const out = [];
+    for (const s of sk.segs) {
+      if (s.kind === 'ell') {
+        const c = pr.P(s.c);
+        let a = 0, b = 0, d = 0;
+        for (let i = 0; i < 3; i++) {
+          const v = K.mv(pr.Rc, K.scl(K.col(s.M, i), s.ax[i]));
+          const x = v[0], y = -v[1];
+          a += x * x; b += x * y; d += y * y;
+        }
+        const tr = (a + d) / 2, df = Math.sqrt(((a - d) / 2) ** 2 + b * b);
+        out.push({ part: s.part, kind: 'ell', c, A: Math.sqrt(tr + df), B: Math.sqrt(Math.max(0, tr - df)), ang: 0.5 * Math.atan2(2 * b, a - d), z: c[2] });
+        continue;
+      }
+      const a = pr.P(s.a), b = pr.P(s.b);
+      let r0 = s.r[0], r1 = s.r[1];
+      if (s.w) {
+        const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+        const X = K.col(s.M, 0), Y = K.col(s.M, 1), Z = K.col(s.M, 2);
+        if (L > 0.5) {
+          const n = K.mv(pr.Ri, [-dy / L, -dx / L, 0]);
+          const half = (r, w) => Math.sqrt((r * K.dot(n, X)) ** 2 + (w * K.dot(n, Z)) ** 2 + (Math.min(r, w) * K.dot(n, Y)) ** 2);
+          r0 = half(s.r[0], s.w[0]); r1 = half(s.r[1], s.w[1]);
+        } else { r0 = Math.max(s.r[0], s.w[0]); r1 = Math.max(s.r[1], s.w[1]); }
+      }
+      out.push({ part: s.part, name: s.name, kind: 'cap', c0: a, c1: b, r0, r1, z: (a[2] + b[2]) / 2 });
+    }
+    return out;
+  }
+  const shapePath = (s, grow) => (s.kind === 'ell' ? ellPath(s.c, s.A + grow, s.B + grow, s.ang) : capPath(s.c0, s.r0 + grow, s.c1, s.r1 + grow));
+
+  // gap between floor and the underside of the trunk (side view, supine)
+  function gapPath(sk, pr, fy) {
+    const torso = sk.segs.filter(s => s.part === 'torso' && s.w && s.name !== 'neck');
+    const circles = [];
+    for (const s of torso) {
+      for (let i = 0; i <= 10; i++) {
+        const t = i / 10, c = K.add(K.scl(s.a, 1 - t), K.scl(s.b, t));
+        const r = s.r[0] + (s.r[1] - s.r[0]) * t, w = s.w[0] + (s.w[1] - s.w[0]) * t;
+        const v = Math.sqrt((r * s.M[3]) ** 2 + (w * s.M[5]) ** 2);
+        circles.push([c[0], c[1], v]);
+      }
+    }
+    const x0 = sk.j.upE[0], x1 = sk.j.hip[0];
+    const pts = [];
+    for (let x = x0; x <= x1; x += 0.75) {
+      let low = Infinity;
+      for (const [cx, cy, v] of circles) { const dx = x - cx; if (Math.abs(dx) < v) low = Math.min(low, cy - Math.sqrt(v * v - dx * dx)); }
+      pts.push([x, low]);
+    }
+    // keep the run between the two contact areas
+    let best = null, cur = null;
+    for (const p of pts) {
+      if (p[1] > 0.35 && p[1] < 30) { if (!cur) cur = []; cur.push(p); }
+      else if (cur) { if (!best || cur.length > best.length) best = cur; cur = null; }
+    }
+    if (cur && (!best || cur.length > best.length)) best = cur;
+    if (!best || best.length < 3) return '';
+    let d = `M${f1(pr.P([best[0][0], 0, 0])[0])} ${f1(fy)}`;
+    for (const [x, y] of best) { const q = pr.P([x, y, 0]); d += `L${f1(q[0])} ${f1(q[1])}`; }
+    d += `L${f1(pr.P([best[best.length - 1][0], 0, 0])[0])} ${f1(fy)}Z`;
+    return d;
+  }
+
+  function el(tag, attrs, parent) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  // ---------- one animated demo ----------
+  // extent of an exercise over its whole cycle, in unscaled view units
+  function extent(ex) {
+    if (ex.__ext) return ex.__ext;
+    const pr0 = projector(ex.cam, 0, 0);
+    let minX = Infinity, maxX = -Infinity, minY = 0, maxY = 0;
+    for (let i = 0; i < 90; i++) {
+      for (const s of shapes(ex.pose((i / 90) * ex.total), pr0)) {
+        const pts = s.kind === 'ell' ? [[s.c, Math.max(s.A, s.B)]] : [[s.c0, s.r0], [s.c1, s.r1]];
+        for (const [c, r] of pts) {
+          minX = Math.min(minX, c[0] - r); maxX = Math.max(maxX, c[0] + r);
+          minY = Math.min(minY, c[1] - r); maxY = Math.max(maxY, c[1] + r);
+        }
+      }
+    }
+    return (ex.__ext = { minX, maxX, minY, maxY });
+  }
+
+  function Demo(host, ex, name) {
+    this.ex = ex; this.t = 0; this.playing = true; this.visible = true;
+    // framing: one scale for every exercise (same viewBox width); height fits this exercise's range of motion
+    const { minX, maxX, minY } = extent(ex);
+    const maxY = Math.max(extent(ex).maxY, ex.cam.pitch ? 34 * Math.sin(ex.cam.pitch * Math.PI / 180) * 0.6 : 0);
+    const H = Math.max(MIN_H, Math.ceil(maxY - minY + PAD_TOP + PAD_FLOOR + OUTLINE));
+    this.fy = H - PAD_FLOOR - maxY;
+    this.ox = VB_W / 2 - (minX + maxX) / 2;
+    this.pr = projector(ex.cam, this.ox, this.fy);
+
+    host.innerHTML = '';
+    const stage = document.createElement('div');
+    stage.className = 'demo-stage';
+    const svg = el('svg', { viewBox: `0 0 ${VB_W} ${H}`, class: 'demo-svg', role: 'img', 'aria-label': `Animated demonstration of ${name}` });
+    if (ex.cam.pitch) {
+      // floor seen from slightly above: draw it as a mat; its near edge is the floor line
+      const c = [[-150, -34], [150, -34], [150, 34], [-150, 34]].map(([x, z]) => this.pr.P([x, 0, z]));
+      el('path', { d: `M${c.map(q => f1(q[0]) + ' ' + f1(q[1])).join('L')}Z`, fill: '#E5DFD7' }, svg);
+      const e = c[3][1] + c[2][1] > c[0][1] + c[1][1] ? [c[3], c[2]] : [c[0], c[1]];
+      el('line', { x1: f1(e[0][0]), y1: f1(e[0][1]), x2: f1(e[1][0]), y2: f1(e[1][1]), stroke: '#BDB4AA', 'stroke-width': 1.5, 'stroke-linecap': 'round' }, svg);
+    } else {
+      el('line', { x1: 8, y1: f1(this.fy + 0.75), x2: VB_W - 8, y2: f1(this.fy + 0.75), stroke: '#BDB4AA', 'stroke-width': 1.5, 'stroke-linecap': 'round' }, svg);
+    }
+    this.gap = ex.gap ? el('path', { fill: '#C47A45', 'fill-opacity': 0.5, stroke: '#8E5C3D', 'stroke-width': 0.8 }, svg) : null;
+    this.parts = {};
+    this.layer = el('g', {}, svg);
+    for (const part of ['torso', 'legR', 'legL', 'armR', 'armL'].concat(Object.values(ex.split || {}))) {
+      if (this.parts[part]) continue;
+      const g = el('g', {}, null);
+      this.parts[part] = { g, line: el('path', {}, g), fill: el('path', {}, g) };
+    }
+    const fid = 'glow-' + (++Demo.n);
+    const flt = el('filter', { id: fid, x: '-50%', y: '-50%', width: '200%', height: '200%' }, el('defs', {}, svg));
+    el('feGaussianBlur', { stdDeviation: 1.6 }, flt);
+    this.hlLayer = el('g', { filter: `url(#${fid})` }, svg);
+    this.press = ex.gap ? el('line', { stroke: '#C47A45', 'stroke-width': 2.6, 'stroke-linecap': 'round', opacity: 0 }, svg) : null;
+    this.hls = [0, 1, 2].map(() => el('path', { fill: '#D0753A' }, this.hlLayer));
+    stage.appendChild(svg);
+    const bar = document.createElement('div');
+    bar.className = 'demo-bar';
+    this.label = document.createElement('span');
+    this.label.className = 'demo-phase';
+    this.btn = document.createElement('button');
+    this.btn.type = 'button';
+    this.btn.className = 'demo-btn';
+    this.btn.addEventListener('click', e => { e.stopPropagation(); this.setPlaying(!this.playing); });
+    bar.append(this.label, this.btn);
+    host.append(stage, bar);
+    this.order = '';
+  }
+  Demo.n = 0;
+  Demo.prototype.setPlaying = function (on) {
+    this.playing = on;
+    this.btn.setAttribute('aria-label', on ? 'Pause demonstration' : 'Play demonstration');
+    this.btn.innerHTML = on
+      ? '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2.2" y="1.8" width="2.6" height="8.4" rx="0.8" fill="currentColor"/><rect x="7.2" y="1.8" width="2.6" height="8.4" rx="0.8" fill="currentColor"/></svg>'
+      : '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3.2 1.8L10 6L3.2 10.2Z" fill="currentColor" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round"/></svg>';
+    if (on) ensureLoop();
+  };
+  Demo.prototype.render = function () {
+    const sk = this.ex.pose(this.t);
+    if (this.label.textContent !== sk.label) this.label.textContent = sk.label;
+    const list = shapes(sk, this.pr);
+    const by = {};
+    const split = this.ex.split || {};
+    for (const s of list) { const part = split[s.name] || s.part; (by[part] = by[part] || []).push(s); }
+    const depth = {};
+    for (const part in by) depth[part] = by[part].reduce((a, s) => a + s.z, 0) / by[part].length;
+    const order = this.ex.order || Object.keys(by).sort((a, b) => depth[a] - depth[b]);
+    const key = order.join();
+    if (key !== this.order) {
+      for (const part of order) this.layer.appendChild(this.parts[part].g);
+      this.order = key;
+    }
+    for (const part of order) {
+      const P = this.parts[part], ss = by[part] || [];
+      const tone = part === 'torso' ? COLORS.torso : (this.ex.tones && this.ex.tones[part]) ? COLORS[this.ex.tones[part]] : depth[part] < depth.torso - 4 ? COLORS.far : COLORS.near;
+      P.line.setAttribute('d', ss.map(s => shapePath(s, OUTLINE)).join(''));
+      P.line.setAttribute('fill', tone.line);
+      P.fill.setAttribute('d', ss.map(s => shapePath(s, 0)).join(''));
+      P.fill.setAttribute('fill', tone.fill);
+    }
+    this.hls.forEach((path, i) => {
+      const h = sk.hl[i];
+      path.setAttribute('d', h ? capPath(this.pr.P(h.a), h.r, this.pr.P(h.b), h.r) : '');
+      path.setAttribute('fill-opacity', h ? h.alpha.toFixed(2) : 0);
+    });
+    if (this.gap) {
+      this.gap.setAttribute('d', gapPath(sk, this.pr, this.fy));
+      const flat = sk.spec.flat || 0;
+      const a = this.pr.P([sk.j.lumE[0] - 4, 0, 0]), b = this.pr.P([sk.j.pelB[0] + 2, 0, 0]);
+      this.press.setAttribute('x1', f1(a[0])); this.press.setAttribute('x2', f1(b[0]));
+      this.press.setAttribute('y1', f1(this.fy - 0.4)); this.press.setAttribute('y2', f1(this.fy - 0.4));
+      this.press.setAttribute('opacity', Math.max(0, (flat - 0.7) / 0.3).toFixed(2));
+    }
+  };
+
+  // ---------- shared loop ----------
+  const demos = [];
+  let raf = 0, last = 0;
+  function frame(ts) {
+    raf = 0;
+    const dt = last ? Math.min(0.25, (ts - last) / 1000) : 0;
+    last = ts;
+    let any = false;
+    for (const d of demos) {
+      if (!d.playing) continue;
+      any = true;
+      if (!d.visible) continue;
+      d.t = (d.t + dt) % d.ex.total;
+      d.render();
+    }
+    if (any) raf = requestAnimationFrame(frame); else last = 0;
+  }
+  function ensureLoop() { if (!raf) { last = 0; raf = requestAnimationFrame(frame); } }
+
+  const reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+    for (const e of entries) { const d = e.target.__demo; if (d) d.visible = e.isIntersecting; }
+  }, { rootMargin: '80px' }) : null;
+
+  function applyMotionPref() {
+    for (const d of demos) {
+      if (reduce.matches) { d.t = d.ex.keyTime; d.setPlaying(false); d.render(); }
+      else d.setPlaying(true);
+    }
+  }
+
+  const hosts = Array.from(document.querySelectorAll('.demo[data-ex]')).filter(h => K.EX[h.dataset.ex]);
+  for (const id in K.EX) { const e = extent(K.EX[id]); VB_W = Math.max(VB_W, Math.ceil(e.maxX - e.minX + 2 * (PAD_X + OUTLINE))); }
+  hosts.forEach(host => {
+    const ex = K.EX[host.dataset.ex];
+    if (!ex) return;
+    const card = host.closest('.exercise-card');
+    const name = card ? card.querySelector('.exercise-name').firstChild.textContent.trim() : host.dataset.ex;
+    const d = new Demo(host, ex, name);
+    host.__demo = d;
+    demos.push(d);
+    if (io) io.observe(host);
+  });
+  applyMotionPref();
+  if (reduce.addEventListener) reduce.addEventListener('change', applyMotionPref);
+  demos.forEach(d => d.render());
+
+  // hook for automated visual checks: routineDemos.seek('gluteBridge', 0.5)
+  window.routineDemos = {
+    ids: demos.map(d => d.ex.id),
+    demos,
+    width: () => VB_W,
+    seek(id, frac) {
+      for (const d of demos) if (!id || d.ex.id === id) { d.setPlaying(false); d.t = frac * d.ex.total; d.render(); }
+    },
+    play() { demos.forEach(d => d.setPlaying(true)); },
+    validate() { return demos.map(d => { const r = K.validate(d.ex.id, 240); return { id: r.id, minFloor: +r.minFloor.toFixed(2), maxDrift: +r.maxDrift.toFixed(2), issues: r.issues.length }; }); },
+  };
+})();
+</script>
+</body>
+</html>

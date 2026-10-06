@@ -10,6 +10,7 @@ A personal collection of interactive calculators and references, served as a sta
 | Affordability Calculator | `home_affordability_calculator_v6.html` | Estimate max home price from income & DTI |
 | Rent vs. Buy | `rent_vs_buy_calculator.html` | Long-term cost comparison with break-even chart |
 | Morning Routine | `daily_routine_card.html` | Daily mobility, core & strengthening checklist with progress tracking |
+| Morning Routine (Animated) | `2026-10-05-daily-routine-card-v4.html` | Same checklist with an animated demonstration of each exercise |
 
 ## Adding a new app
 
